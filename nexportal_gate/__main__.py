@@ -2,6 +2,7 @@
 
   intake "<text>" --requester R   the door: triage a raw request, file it (or flag the duplicate)
   draft <n>                       Triaged → Drafted: fill the DoR form from the intake record
+  body <n> --file <spec.md>       replace the body (the answered spec); a Ready card's record goes stale
   gate <n> | --file <spec.md>     before refinement: Tier 1 + Tier 2, post the NX-GATE record
   flip <n> <Status>               the guarded door: refuses Ready without a fresh record (exit 3)
   audit                           Ready items without a fresh record (the door that can't be locked)
@@ -210,6 +211,24 @@ def cmd_draft(args) -> int:
     return 0
 
 
+def cmd_body(args) -> int:
+    """Replace an issue's body from a file — the 'answer the questions' step, on the record."""
+    _, body = fx.split_frontmatter(Path(args.file).read_text(encoding="utf-8"))
+    if args.dry_run:
+        print(body, end="")
+        return 0
+    gh, n = GH, args.issue
+    repo = _repo(args, gh)
+    board.set_body(gh, repo, n, body)
+    print(f"body: #{n} replaced from {args.file} (hash {body_hash(body)[:8]})")
+    cfg = board.load_board(Path(args.board))
+    item = board.project_item(gh, cfg, repo, n)
+    if item.get("status") == "Ready":
+        print(f"body: WARNING #{n} is Ready and its NX-GATE record no longer matches the body — run "
+              f"nexportal-gate gate {n}, and move it yourself: nexportal-gate flip {n} Drafted", file=sys.stderr)
+    return 0
+
+
 def cmd_flip(args) -> int:
     gh = GH
     return board.flip(gh, board.load_board(Path(args.board)), _repo(args, gh), args.issue, args.status)
@@ -260,6 +279,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("issue", type=int)
     _add_common(p, llm=False)
     p.set_defaults(fn=cmd_draft)
+
+    p = sub.add_parser("body", help="replace an issue's body from a spec file")
+    p.add_argument("issue", type=int)
+    p.add_argument("--file", required=True)
+    _add_common(p, llm=False)
+    p.set_defaults(fn=cmd_body)
 
     p = sub.add_parser("gate", help="judge a drafted spec")
     p.add_argument("issue", type=int, nargs="?")

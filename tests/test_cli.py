@@ -140,3 +140,36 @@ def test_fixtures_replay_notes_the_recorded_prompt_version_in_the_table(tmp_path
     assert cli.main(["fixtures", "--replay", "--recorded-dir", str(d), "--out", str(out_path)]) == 0
     table = out_path.read_text()
     assert "recorded under prompt v1" in table and "current prompt is v2" in table and "WARNING" in table
+
+
+# --- finding 4: body <n> --file ------------------------------------------------------------------
+
+def test_body_sets_the_issue_body_from_a_file_stripping_frontmatter(tmp_path, monkeypatch, capsys):
+    spec = tmp_path / "spec.md"
+    spec.write_text('---\ntitle: "t"\nversion: 3\n---\n## Outcome\n\nx\n')
+    gh = FakeGh([(("issue", "edit"), ""), (("api", "graphql"), item_graphql("Drafted"))])
+    monkeypatch.setattr(cli, "GH", gh)
+    assert cli.main(["body", "2", "--file", str(spec), "--repo", "o/r", "--board", "board.toml"]) == 0
+    argv, stdin = next((a, s) for a, s in gh.calls if a[:2] == ["issue", "edit"])
+    assert stdin == "## Outcome\n\nx\n" and argv[argv.index("--body-file") + 1] == "-"
+    out = capsys.readouterr()
+    assert "body: #2" in out.out and out.err == ""
+
+
+def test_body_on_a_ready_card_warns_that_the_record_is_stale(tmp_path, monkeypatch, capsys):
+    spec = tmp_path / "spec.md"
+    spec.write_text("## Outcome\n\ny\n")
+    gh = FakeGh([(("issue", "edit"), ""), (("api", "graphql"), item_graphql("Ready"))])
+    monkeypatch.setattr(cli, "GH", gh)
+    assert cli.main(["body", "2", "--file", str(spec), "--repo", "o/r", "--board", "board.toml"]) == 0
+    err = capsys.readouterr().err
+    assert "Ready" in err and "gate 2" in err and "flip 2 Drafted" in err
+
+
+def test_body_dry_run_prints_and_writes_nothing(tmp_path, monkeypatch, capsys):
+    spec = tmp_path / "spec.md"
+    spec.write_text("## Outcome\n\nz\n")
+    gh = FakeGh([])
+    monkeypatch.setattr(cli, "GH", gh)
+    assert cli.main(["body", "2", "--file", str(spec), "--repo", "o/r", "--dry-run"]) == 0
+    assert capsys.readouterr().out == "## Outcome\n\nz\n" and gh.calls == []

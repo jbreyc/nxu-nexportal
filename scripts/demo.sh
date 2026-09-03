@@ -17,7 +17,7 @@ run python3 -m nexportal_gate gate "$N" --repo "$REPO"
 run python3 -m nexportal_gate flip "$N" Ready --repo "$REPO"
 
 say "# the requester answers the questions — the body becomes the spec"
-python3 -c "from nexportal_gate.fixtures import split_frontmatter; print(split_frontmatter(open('seed/10-adds-close-countdown.md').read())[1], end='')" | gh issue edit "$N" --repo "$REPO" --body-file - >/dev/null && echo "body replaced"
+run python3 -m nexportal_gate body "$N" --file seed/10-adds-close-countdown.md --repo "$REPO"
 
 run python3 -m nexportal_gate gate "$N" --repo "$REPO"
 run python3 -m nexportal_gate flip "$N" Ready --repo "$REPO"
