@@ -32,7 +32,7 @@ Inbox → Triaged → Drafted → Ready → In Sprint → Done
 | [#4](https://github.com/jbreyc/nxu-nexportal/issues/4) | Marketing's Friday ask: triaged; the message separates the Monday extract from the dashboard. |
 | [#5](https://github.com/jbreyc/nxu-nexportal/issues/5) | The trap: Tier 1 passes a well-formed spec; Tier 2 names — under both prompts — whether the payments provider can allocate one payment to a chosen set of invoices. |
 | [#6](https://github.com/jbreyc/nxu-nexportal/issues/6) | The deadline rail, three generations: v1, v2 and v3 each drew finer blocking findings under prompt v1 (the calibration lesson below); v3 under prompt v2 → `ready` → flipped. |
-| [#10](https://github.com/jbreyc/nxu-nexportal/issues/10) | The recorded demo: `intake` → `draft` (eight open questions) → `gate` fails Tier 1 → `flip` refused → the questions answered → `gate` `ready` → `flip` allowed. [`demo/transcript.md`](demo/transcript.md), [`demo/nexportal-gate.cast`](demo/nexportal-gate.cast). |
+| [#11](https://github.com/jbreyc/nxu-nexportal/issues/11) | The recorded demo, CLI end to end in two minutes: `intake` → `draft` (five open questions) → `gate` fails Tier 1 → `flip` refused → `body` with the answered spec → `gate` `ready` → `flip` allowed. [`demo/transcript.md`](demo/transcript.md), [`demo/nexportal-gate.cast`](demo/nexportal-gate.cast). [#10](https://github.com/jbreyc/nxu-nexportal/issues/10) is the earlier take of the same chain; re-running its request was refused as a duplicate — by design. |
 
 The six pre-registered cases: [`fixtures/results.md`](fixtures/results.md) (prompt v2, 4/6) and [`fixtures/results.v1.md`](fixtures/results.v1.md) (prompt v1, 3/6). The verdicts in [`fixtures/expected.json`](fixtures/expected.json) were frozen before the first run and never edited — git history is the proof; misses stay in the table with a reading.
 
@@ -54,7 +54,7 @@ python3 -m nexportal_gate fixtures                # the six cases, live (~7 min)
 python3 -m nexportal_gate gate 2                  # against the demo repo: posts the record, sets Reason
 python3 -m nexportal_gate flip 2 Ready            # refused, exit 3
 python3 -m nexportal_gate audit                   # clean
-bash scripts/demo.sh                              # one fresh request end to end (what the recording shows)
+REQUEST="…" SPEC=seed/your-spec.md bash scripts/demo.sh   # one fresh request end to end (what the recording shows)
 claude --plugin-dir .                             # then: /gate 2 · /intake "…" --requester you
 ```
 
@@ -67,7 +67,7 @@ nexportal_gate/   text · shape (Tier 1) · adversary (Tier 2, three clients) ·
 prompts/          system.md (versioned; v2) · gate.md · intake.md · the two JSON schemas
 context/          platform.md — the stated assumptions the gate judges hidden dependencies against
 fixtures/         the six cases · expected.json (frozen) · recorded/ · results.md · results.v1.md · readings.json · open-issues.json
-seed/             the brief's v2 and v3 (v3 is issue #1's body), the rail's v2 and v3, the four fillers, the demo's answered spec
+seed/             the brief's v2 and v3 (v3 is issue #1's body), the rail's v2 and v3, the four fillers, the two demo takes' answered specs
 demo/ scripts/    the recording (.cast, .gif, transcript) and the script that produced it
 hooks/ commands/ .claude-plugin/   the Claude Code plugin
 .github/ISSUE_TEMPLATE/   spec.yml — the form IS the Definition of Ready · request.yml — the stakeholder door
