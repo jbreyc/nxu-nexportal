@@ -1,0 +1,12 @@
+[
+  {"number": 1, "title": "Refer a friend — link first, the exchange stated, referral state",
+   "outcome": "Learners with no distribution channel share the referral at least once: the card gives them a reason and a one-tap way to send it."},
+  {"number": 2, "title": "Improve the dashboard so students engage more",
+   "outcome": "Improve the dashboard so students engage more with it."},
+  {"number": 5, "title": "Wallet — pay selected invoices",
+   "outcome": "A learner with more than one open invoice pays the ones they choose, in one action, and sees the total update before paying."},
+  {"number": 6, "title": "Deadline rail — the next four dated items across coursework, payments, documents, registration",
+   "outcome": "Learners see the next four dated items across coursework, payments, documents and registration at the top of the dashboard, nearest first."},
+  {"number": 7, "title": "Ask Nexa — programme, payment and deadline questions from the learner's own record",
+   "outcome": "A learner asks a programme, payment or deadline question in the dashboard and gets an answer grounded in the catalogue and their own record."}
+]
