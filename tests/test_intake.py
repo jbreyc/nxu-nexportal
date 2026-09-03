@@ -80,7 +80,7 @@ def test_run_intake_rejected_without_a_call():
 def test_run_intake_triaged():
     r = run(CEO, adversary.FakeClient({"k": out()}), requester="fadl", weekday="Tuesday")
     assert r.status == "triaged" and r.duplicate_of is None and r.tier2 == out()
-    assert r.prompt_version == 1 and r.model == "m" and r.failures == []
+    assert r.prompt_version == 2 and r.model == "m" and r.failures == []
 
 
 def test_run_intake_duplicate_confirmed():
@@ -103,7 +103,7 @@ def test_run_intake_passes_candidates_weekday_platform_and_schema():
             return out()
     spy = Spy()
     run(DUP, spy, requester="ops", weekday="Friday")
-    assert spy.system.startswith("version: 1")
+    assert spy.system.startswith("version: 2")
     assert "#1 — Refer a friend" in spy.user and "Friday" in spy.user and "Canvas" in spy.user
     assert DUP in spy.user and "ops" in spy.user
     assert spy.schema["properties"]["duplicate"]["required"] == ["is_duplicate", "of_issue", "why"]

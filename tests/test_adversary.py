@@ -75,7 +75,7 @@ def test_run_gate_records_both_verdicts():
     client = adversary.FakeClient({"k": out(verdict="ready", ambiguities=[amb("design", True)])})
     r = run(GOOD, client)
     assert (r.verdict, r.model_verdict) == ("needs-info", "ready")
-    assert r.tier1 == [] and r.body_sha256 == body_hash(GOOD) and r.prompt_version == 1 and r.model == "m"
+    assert r.tier1 == [] and r.body_sha256 == body_hash(GOOD) and r.prompt_version == 2 and r.model == "m"
 
 
 def test_run_gate_passes_system_platform_body_and_schema_to_the_client():
@@ -85,7 +85,7 @@ def test_run_gate_passes_system_platform_body_and_schema_to_the_client():
             return out()
     spy = Spy()
     run(GOOD, spy, key="fixture-01")
-    assert spy.system.startswith("version: 1") and spy.key == "fixture-01"
+    assert spy.system.startswith("version: 2") and spy.key == "fixture-01"
     assert "Canvas" in spy.user and GOOD.strip() in spy.user
     assert spy.schema["properties"]["verdict"]["enum"] == ["ready", "needs-info"]
 
