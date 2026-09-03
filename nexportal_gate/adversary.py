@@ -65,7 +65,12 @@ class ClaudeCodeClient:
                 last = f"claude returned no JSON envelope (rc={proc.returncode}): {detail}"
                 continue
             if envelope.get("is_error"):
-                raise AdversaryError(f"claude reported an error: {envelope.get('result')}")
+                detail = (f"claude reported an error (subtype={envelope.get('subtype')}): "
+                          f"{envelope.get('result')!r}; stderr: {(proc.stderr or '').strip()[:300]!r}")
+                if "log" in str(envelope.get("result") or "").lower():   # not logged in — retrying won't help
+                    raise AdversaryError(detail)
+                last = detail                                             # transient: one retry
+                continue
             out = envelope.get("structured_output")
             if isinstance(out, dict):
                 return out

@@ -179,3 +179,23 @@ def test_prompt_version_reads_first_line():
 
 def test_render_replaces_tokens_only():
     assert adversary.render("a {{x}} {not} {{y}}", x="1", y="2") == "a 1 {not} 2"
+
+
+def test_claude_transient_error_retries_once_then_raises_with_subtype():
+    runner = fake_runner({"is_error": True, "subtype": "error_during_execution", "result": None})
+    with pytest.raises(adversary.AdversaryError, match="error_during_execution"):
+        adversary.ClaudeCodeClient(runner=runner).complete("s", "u", {}, key="k")
+    assert len(runner.calls) == 2
+
+
+def test_claude_login_error_does_not_retry():
+    runner = fake_runner({"is_error": True, "result": "Not logged in · Please run /login"})
+    with pytest.raises(adversary.AdversaryError, match="Not logged in"):
+        adversary.ClaudeCodeClient(runner=runner).complete("s", "u", {}, key="k")
+    assert len(runner.calls) == 1
+
+
+def test_claude_transient_error_then_success():
+    runner = fake_runner({"is_error": True, "subtype": "error_during_execution", "result": None},
+                         {"is_error": False, "structured_output": {"verdict": "ready"}})
+    assert adversary.ClaudeCodeClient(runner=runner).complete("s", "u", {}, key="k") == {"verdict": "ready"}
