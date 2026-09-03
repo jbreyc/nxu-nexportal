@@ -1,0 +1,65 @@
+name: Spec — the Definition of Ready form
+description: A drafted spec for the gate. The fields ARE the Definition of Ready; the gate checks their shape, then their substance.
+title: "<one-line title>"
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: One sentence — what is true when this is done, and for whom.
+      placeholder: Learners with no distribution channel share the referral at least once.
+    validations:
+      required: true
+  - type: textarea
+    id: users
+    attributes:
+      label: Users
+      description: Who, in which moment.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: At least two; each EARS (WHEN …, THE SYSTEM SHALL …) or Given / When / Then.
+      value: |
+        - [ ] WHEN …, THE SYSTEM SHALL …
+        - [ ] THE SYSTEM SHALL …
+    validations:
+      required: true
+  - type: textarea
+    id: design
+    attributes:
+      label: Design
+      description: "A link; the literal `n/a — no UI`; or `brief:` followed by `Goal:`, `Keep:`, `Change:`, `Out of scope:` lines a designer can execute without you in the room."
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Systems, teams, rules, vendors this touches — or `none — <reason>`.
+    validations:
+      required: true
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of scope
+      description: What is deliberately left out.
+    validations:
+      required: true
+  - type: input
+    id: size
+    attributes:
+      label: Size
+      description: "`S | M | L | XL — one-line rationale`"
+      placeholder: S — one card, two states, one toast
+    validations:
+      required: true
+  - type: input
+    id: requester
+    attributes:
+      label: Requester
+      description: A name or @handle — the person who can answer "what" and "why".
+    validations:
+      required: true

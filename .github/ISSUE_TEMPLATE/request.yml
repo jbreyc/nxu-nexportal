@@ -1,0 +1,22 @@
+name: Request — the door
+description: A raw request in your own words. One sentence is enough; intake triages it for Thursday.
+title: "<what you need>"
+body:
+  - type: textarea
+    id: request
+    attributes:
+      label: Request
+      description: What you need. If you know what a learner should be able to do on day one, say it.
+    validations:
+      required: true
+  - type: input
+    id: requester
+    attributes:
+      label: Requester
+    validations:
+      required: true
+  - type: input
+    id: by_when
+    attributes:
+      label: By when
+      description: Only if there is a real date — and whose date it is.
