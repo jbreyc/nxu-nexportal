@@ -25,7 +25,7 @@ Inbox → Triaged → Drafted → Ready → In Sprint → Done
 
 | Issue | What it shows |
 |---|---|
-| [#1](https://github.com/jbreyc/nxu-nexportal/issues/1) | The Part 0 Q4 design brief. v1 → `NX-GATE: needs-info` with five blocking gaps (prompt v1); v2 of the brief → `needs-info` again under prompt v1 and a **refused flip**; under prompt v2 → `ready` and the flip **allowed**. Also the duplicate note from fixture 06. |
+| [#1](https://github.com/jbreyc/nxu-nexportal/issues/1) | The Part 0 Q4 design brief, three versions on one trail. v1 (fixture 01) → `NX-GATE: needs-info` with five blocking gaps (prompt v1); v2 → `needs-info` under prompt v1, a **refused flip**, then `ready` under prompt v2 and flipped; v3 — the brief redefined from the Q3 assessment (`seed/01-referral-brief-v3.md`) — → `needs-info` on one untestable criterion, fixed, `ready`, flipped. Also the duplicate note from fixture 06. |
 | [#2](https://github.com/jbreyc/nxu-nexportal/issues/2) | The vague spec: shape passes; `needs-info` under both prompts (no problem statement, three untestable criteria); a refused flip — the wall wrote nothing. |
 | [#3](https://github.com/jbreyc/nxu-nexportal/issues/3) | The CEO's chatbot, through the door: `NX-INTAKE:` (no learner outcome, XL, the message that names Thursday and what moves out) → `draft` → `gate` fails Tier 1 at the first open question. |
 | [#4](https://github.com/jbreyc/nxu-nexportal/issues/4) | Marketing's Friday ask: triaged; the message separates the Monday extract from the dashboard. |
@@ -66,7 +66,7 @@ nexportal_gate/   text · shape (Tier 1) · adversary (Tier 2, three clients) ·
 prompts/          system.md (versioned; v2) · gate.md · intake.md · the two JSON schemas
 context/          platform.md — the stated assumptions the gate judges hidden dependencies against
 fixtures/         the six cases · expected.json (frozen) · recorded/ · results.md · results.v1.md · readings.json · open-issues.json
-seed/             the brief's v2, the rail's v2 and v3, the four fillers, the demo's answered spec
+seed/             the brief's v2 and v3 (v3 is issue #1's body), the rail's v2 and v3, the four fillers, the demo's answered spec
 demo/ scripts/    the recording (.cast, .gif, transcript) and the script that produced it
 hooks/ commands/ .claude-plugin/   the Claude Code plugin
 .github/ISSUE_TEMPLATE/   spec.yml — the form IS the Definition of Ready · request.yml — the stakeholder door
