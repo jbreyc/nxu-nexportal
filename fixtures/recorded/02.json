@@ -1,0 +1,105 @@
+{
+  "key": "02",
+  "model": "claude-fable-5-1",
+  "prompt_version": 1,
+  "ts": "2026-09-03T11:11:00+00:00",
+  "structured_output": {
+    "verdict": "needs-info",
+    "steelman": "Students log into myNXU, see nothing that rewards the visit, and leave; the CEO wants the dashboard to give them a reason to return — most plausibly by surfacing what already changes in their record (Friday deadlines, posted grades, invoices, SAP standing) so each login has news. The spec does not say that; it says \"engaging\", \"want to come back\" and \"modern and clean\" with no metric, no feature and no design, so the steelman is a guess and the spec is underspecified.",
+    "ambiguities": [
+      {
+        "text": "\"Engage more\" has no definition. Sessions per week? 7-day return rate? Clicks on the deadline rail? Time on page?",
+        "why_it_bites_mid_build": "Every design and build choice (what goes above the fold, whether to add notifications, whether to instrument anything) depends on which number is supposed to move. An engineer will pick one and be wrong.",
+        "owner": "requester",
+        "blocking": true
+      },
+      {
+        "text": "No change to the dashboard is named. \"A few tweaks\" could be a restyle, a new widget, a streak/gamification mechanic, course progress from Canvas, or a Nexa prompt.",
+        "why_it_bites_mid_build": "There is nothing to build. The engineer invents the feature; the CEO reviews it and it is not what he meant.",
+        "owner": "requester",
+        "blocking": true
+      },
+      {
+        "text": "Design says \"n/a — no UI\" while an acceptance criterion says the dashboard shall \"look modern and clean\". The whole change is UI.",
+        "why_it_bites_mid_build": "With no frame, the engineer restyles by taste; \"modern and clean\" is judged at demo by whoever is in the room. The one designer has not been asked.",
+        "owner": "design",
+        "blocking": true
+      },
+      {
+        "text": "Out of scope is \"nothing in particular\". Canvas coursework progress, payments, referral wallet and Nexa are all adjacent to the dashboard and each is a different size.",
+        "why_it_bites_mid_build": "Without a fence the engineer must decide whether to pull Canvas module completion (readability unknown) or invoice state into the dashboard — one of those turns a week into a quarter.",
+        "owner": "requester",
+        "blocking": true
+      },
+      {
+        "text": "Which students. All, new monthly starts in week 1, students on SAP warning, students with an unpaid instalment?",
+        "why_it_bites_mid_build": "Content that makes a week-1 starter come back (ID upload deadline, first module) is not what makes a week-7 student come back (grades, next-term selection window). Segment decides the widget.",
+        "owner": "requester",
+        "blocking": false
+      },
+      {
+        "text": "No baseline. Is dashboard engagement measured today, and by what?",
+        "why_it_bites_mid_build": "If there is no instrumentation, the outcome cannot be judged after ship; the build finishes and nobody can say whether it worked.",
+        "owner": "engineering",
+        "blocking": false
+      }
+    ],
+    "untestable_criteria": [
+      {
+        "criterion": "THE SYSTEM SHALL make the dashboard more engaging for students.",
+        "rewrite": "Over the four weeks after release, the share of active students who open the dashboard on ≥ 2 distinct days per week is ≥ X% (baseline Y% measured over the four weeks before release)."
+      },
+      {
+        "criterion": "WHEN a student logs in, THE SYSTEM SHALL show them something that makes them want to come back.",
+        "rewrite": "WHEN a student logs in, THE SYSTEM SHALL show above the fold, without scrolling, the next Friday assignment due date, the most recently posted grade, and current SAP standing; verified with a fixture student carrying each of the five available events (grade posted, credential earned, invoice issued/paid, document status changed, registration window opened)."
+      },
+      {
+        "criterion": "THE SYSTEM SHALL look modern and clean.",
+        "rewrite": "The dashboard matches the approved design frame [link] at 360px and 1280px widths; visual-regression snapshots against that frame pass in CI."
+      }
+    ],
+    "hidden_dependencies": [
+      {
+        "name": "Designer (one, shared)",
+        "why": "Spec says no UI; the change is entirely UI. Nothing can be sized or built until the designer produces a frame, and that pulls her off whatever she is on now.",
+        "blocking": true
+      },
+      {
+        "name": "Analytics / instrumentation",
+        "why": "The platform context lists no engagement telemetry. The outcome is an engagement number; without instrumentation the criterion has no pass/fail and the dependency is unsized.",
+        "blocking": true
+      },
+      {
+        "name": "Canvas via LTI",
+        "why": "If \"engaging\" means course progress or module completion on the dashboard, the context states item-level completion readability from myNXU is unknown. That single choice moves the band from S to XL.",
+        "blocking": true
+      },
+      {
+        "name": "Deadline rail events (grade posted, credential earned, invoice issued/paid, document status changed, registration window opened)",
+        "why": "The cheapest \"reason to come back\" is already flowing through these five events. Any content outside them needs a new event source. The spec should say whether v1 is bounded to these.",
+        "blocking": false
+      },
+      {
+        "name": "SAP standing rule",
+        "why": "Surfacing standing (weakest of CGPA / pace / max time frame) on the dashboard is the highest-stakes content it could show; a wrong computation is a student-facing incident. Needs the rule owner named if included.",
+        "blocking": false
+      },
+      {
+        "name": "Nexa support assistant",
+        "why": "If engagement means a conversational prompt on the dashboard, Nexa's catalogue and record access become a dependency. Not named.",
+        "blocking": false
+      }
+    ],
+    "size": {
+      "band": "XL",
+      "confidence": 0.8,
+      "risk": "Unsizeable as written. If refinement names one widget built only from the five existing rail events plus a design frame, it becomes S–M; if it pulls Canvas module completion or new telemetry, it stays XL."
+    },
+    "refinement_agenda": [
+      "Decide the engagement metric and its baseline: the one number, how it is measured today, and who reads it (requester + engineering on whether instrumentation exists).",
+      "Decide the single v1 change to the dashboard, bounded to content from the five existing events, and write the out-of-scope list (Canvas progress, payments, referral, Nexa) explicitly.",
+      "Route to design for one frame at two widths and rewrite the three acceptance criteria as observable checks against that frame and the metric."
+    ],
+    "requester_message": "@fadl — this can't go to the team yet: as written, an engineer would have to invent both the feature and the definition of success, and \"no UI\" is wrong because the whole change is visual.\n\nOwed from you by Thursday triage:\n1. The number you want to move (e.g. students opening the dashboard on 2+ days a week) and what you'd accept as a win.\n2. The one thing you want a student to see on login that isn't there today. Pick one for v1.\n3. What is explicitly out: course progress from Canvas, payments, referral wallet, Nexa on the dashboard. Say which of those you don't mean.\n\nOwed from the team once you've answered: a design frame from our one designer, and engineering's answer on whether we have any dashboard telemetry at all. Both go on the same triage agenda.\n\nSizing: unsizeable right now. Bounded to the events we already have plus a frame, it's small-to-medium. If it means reading module completion out of Canvas, that is a different quarter.\n\nI don't have the board in front of me; at Thursday's triage I'll name the Ready item this would displace from the next sprint and the design work it would pause. If those answers arrive before Thursday it goes into the same triage; if not, the following one."
+  }
+}

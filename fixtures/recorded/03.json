@@ -1,0 +1,51 @@
+{
+  "key": "03",
+  "model": "claude-fable-5-1",
+  "prompt_version": 1,
+  "ts": "2026-09-03T11:11:43+00:00",
+  "structured_output": {
+    "outcome": "None stated. Implied: a learner gets an answer to a programme / payment / deadline question inside myNXU without a support ticket. The request names a feature (\"AI chatbot\"), a comparator (\"every university site\") and a deadline (\"this sprint\"); it does not name a learner, a question they cannot get answered today, or how anyone would know it worked.",
+    "urgency": {
+      "claim": "This sprint. Every university site has one and ours doesn't. Quick with existing APIs.",
+      "evidence": "None supplied. No support-ticket volume, no learner asks, no named competitor feature, no external date. 'Quick with the APIs we already have' is an effort estimate, not evidence of urgency, and the APIs are not named.",
+      "assessment": "Not urgent on the evidence given. Parity is a reason to triage it, not a reason to jump a committed sprint. Hidden dependency that is blocking for size: Nexa (the existing support assistant) is not mentioned; the request cannot be sized until it is clear whether this is surfacing Nexa in myNXU or building a second assistant. Sits at Inbox until Thursday."
+    },
+    "duplicate": {
+      "is_duplicate": false,
+      "of_issue": null,
+      "why": "No issues were shortlisted. Not a duplicate of anything listed. Flag for Thursday: Nexa exists per platform context; confirm whether an unlisted issue already covers surfacing Nexa in myNXU before drafting a new one."
+    },
+    "size": {
+      "band": "XL",
+      "confidence": 0.55,
+      "risk": "Unsizeable as written. If Nexa has an embeddable surface or callable API and the ask is to place it in the shell with a handoff rule, this drops to M. If it means a new assistant reading Canvas, the invoicing provider, the ID vendor and SAP standing, XL holds and grows."
+    },
+    "questions": [
+      {
+        "text": "Is this Nexa inside myNXU, or something Nexa does not do? Name one question a learner asks today that goes unanswered.",
+        "owner": "requester"
+      },
+      {
+        "text": "What is the evidence: support-ticket counts, learner requests, or a specific university feature you want matched? Attach it.",
+        "owner": "requester"
+      },
+      {
+        "text": "Which topics are in scope — programme, payments, deadlines (Nexa's remit) — and which are out (grades, SAP standing, ID-verification status)? What must it never answer?",
+        "owner": "requester"
+      },
+      {
+        "text": "Does Nexa expose an embeddable widget or API myNXU can call, and with what access to the learner's own record?",
+        "owner": "engineering"
+      },
+      {
+        "text": "Which 'APIs we already have' are read-callable from myNXU for a chat context: Canvas via LTI, the invoicing provider, the ID vendor? Which of these is unknown today?",
+        "owner": "engineering"
+      },
+      {
+        "text": "Where does the chat surface live in the shell, and what does the learner see when it cannot answer — handoff to human support, or a dead end?",
+        "owner": "design"
+      }
+    ],
+    "requester_message": "Fadl — got it, it's in Inbox for Thursday triage. It cannot be sized yet, so it cannot go into a sprint yet.\n\nThe blocker: NexPortal already has Nexa, the support assistant that answers programme, payment and deadline questions from the catalogue and the learner's record. Your request does not say whether you want Nexa surfaced inside myNXU or a new assistant that does more. Those are different sizes by an order of magnitude.\n\nWhat I need from you before Thursday:\n1. One question a learner asks today that they cannot get answered — and whether Nexa can answer it.\n2. The evidence for urgency: ticket volume, learner asks, or the specific university feature you want matched.\n3. Topics in and out of scope, and anything it must never answer (grades, standing, ID status).\n\nEngineering will confirm which APIs are actually callable from myNXU; \"the APIs we already have\" is not established for Canvas, the invoicing provider or the ID vendor.\n\nThe current sprint is committed. If this goes in mid-sprint, something already committed moves out, and that call is made at Thursday triage with the team, not here. Send the three answers and it gets a real size on Thursday."
+  }
+}

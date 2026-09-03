@@ -1,0 +1,43 @@
+{
+  "key": "06",
+  "model": "claude-fable-5-1",
+  "prompt_version": 1,
+  "ts": "2026-09-03T11:15:10+00:00",
+  "structured_output": {
+    "outcome": "Duplicate of #1 — fold into it at Thursday triage. Learner outcome not stated in the request; #1 states it (\"learners with no distribution channel share the referral at least once\"). Not blocking; #1 needs three refinement decisions before Ready.",
+    "urgency": {
+      "claim": "None stated. The request describes friction, not a deadline or a loss.",
+      "evidence": "One observation: learners currently copy a code and explain it themselves. No counts of learners who copy, share, drop, or ask support how referral works.",
+      "assessment": "Not urgent on the evidence given. Arrived out of process on Wednesday; joins Thursday triage in the normal order. If ops wants it ahead of the queue, it owes the numbers behind the friction claim by Thursday."
+    },
+    "duplicate": {
+      "is_duplicate": true,
+      "of_issue": 1,
+      "why": "#1 already covers a dashboard card with a one-tap way to send the referral link, plus the stated exchange and a learner outcome. This request is a strict subset of #1 and adds no new scope or evidence."
+    },
+    "size": {
+      "band": "M",
+      "confidence": 0.6,
+      "risk": "If the per-learner referral link and market eligibility live only in the external programme/finance system with no API myNXU can read, this becomes L: new integration plus finance in the loop for amounts per market."
+    },
+    "questions": [
+      {
+        "text": "What is the pass/fail for 'shared' — a share-sheet tap, a link delivered, or a referred learner who starts? And what is today's baseline (how many learners copy the code, how many referrals start per month)?",
+        "owner": "requester"
+      },
+      {
+        "text": "Does every eligible learner already have a per-learner link today, or only a code? Who issues it — the referral programme system, finance, or myNXU?",
+        "owner": "requester"
+      },
+      {
+        "text": "Can myNXU read the learner's referral link and their market eligibility (finance-set markets and amounts) from an existing source, or does this need a new integration?",
+        "owner": "engineering"
+      },
+      {
+        "text": "Which share mechanism: native share sheet, copy-link, or a pre-filled message? What does the message say to state the exchange, and what does the card show when the learner's market is ineligible?",
+        "owner": "design"
+      }
+    ],
+    "requester_message": "Your request to share a referral link from the dashboard is already covered by open issue #1 (Refer a friend — link first, the exchange stated). I'm attaching yours to it rather than opening a second issue; it goes to triage Thursday.\n\nTwo things owed from you by Thursday so #1 can move: (1) what \"shared\" means for pass/fail — a tap, a link sent, or a referred learner who starts — and the baseline today: how many learners copy the code, how many referrals start per month. (2) Whether every eligible learner already has a link today or only a code, and which system issues it.\n\nThe current sprint is committed. Nothing in this request says it must jump the queue; if you believe it should, the numbers above are what triage weighs it on, and an item of matching size would leave the sprint to make room. Provisional size is a sprint for one person, less certain until engineering confirms myNXU can read the referral link and market eligibility without a new integration with finance's system."
+  }
+}

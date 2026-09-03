@@ -1,0 +1,55 @@
+{
+  "key": "04",
+  "model": "claude-fable-5-1",
+  "prompt_version": 1,
+  "ts": "2026-09-03T11:12:33+00:00",
+  "structured_output": {
+    "outcome": "Triaged — not ready. Split into two artefacts: (a) a one-off numbers extract for Monday, sizeable only once metric definitions and data sources are confirmed today; (b) a dashboard in the product, which enters the Thursday triage queue as a normal request. No learner outcome stated. Blocking: funnel stages undefined, engagement metric undefined, three unnamed data dependencies (Canvas engagement readability, pre-enrolment funnel source, finance market list).",
+    "urgency": {
+      "claim": "Board meets Monday 9am; the deck needs enrolment funnel by market and learner engagement.",
+      "evidence": "The meeting date is asserted, not evidenced — no deck, agenda, or list of the exact figures the board expects is attached. Nothing shows a dashboard (as opposed to numbers on a slide) is what the board needs.",
+      "assessment": "The Monday date is plausible and treated as real. It applies to the deck, not to a dashboard: a portal feature arriving Friday cannot be built, verified and shipped before Monday 9am under a two-week sprint. The only Monday-feasible path is a one-off extract, and that is feasible only if definitions and data access are settled today. The dashboard itself carries no Monday urgency."
+    },
+    "duplicate": {
+      "is_duplicate": false,
+      "of_issue": null,
+      "why": "No open issues were shortlisted; nothing on the board covers board-level reporting, funnel, or engagement analytics."
+    },
+    "size": {
+      "band": "XL",
+      "confidence": 0.5,
+      "risk": "If 'dashboard' means a one-off extract to a spreadsheet/slide, and engineering confirms Canvas engagement and the pre-enrolment stages are queryable, this drops to S. If it means a live screen in the product fed by Canvas plus an unnamed admissions/CRM source, XL holds — two integrations, one of which (Canvas item-level completion) is stated unknown."
+    },
+    "questions": [
+      {
+        "text": "For Monday: is a one-off set of numbers (spreadsheet or slide) acceptable, or does the board need a live dashboard in the product? Answer this first — it decides whether Monday is possible at all.",
+        "owner": "requester"
+      },
+      {
+        "text": "Name the funnel stages exactly (e.g. lead → applied → ID verified → enrolled → started first course) and the date range and markets to report. Which stages happen before a learner exists in NexPortal, and in which system?",
+        "owner": "requester"
+      },
+      {
+        "text": "Define 'learner engagement' as one measurable thing: active in last 7/30 days, module completion rate, assignment submission rate, or logins. Pick one.",
+        "owner": "requester"
+      },
+      {
+        "text": "Confirm the market list with finance — markets are a finance definition per the referral programme; marketing's segmentation may not match.",
+        "owner": "requester"
+      },
+      {
+        "text": "Can item-level module completion, submissions, or activity be read from Canvas by myNXU today? If not, what is the nearest readable proxy (grade posted events)?",
+        "owner": "engineering"
+      },
+      {
+        "text": "Where do pre-enrolment funnel stages (leads, applications) live, and does NexPortal have read access to that system? It is not in the platform context.",
+        "owner": "engineering"
+      },
+      {
+        "text": "For the dashboard (not the extract): who views it, where in the portal, and what does a market-by-market funnel look like with the current design system? Not needed for Monday.",
+        "owner": "design"
+      }
+    ],
+    "requester_message": "Your request arrived Friday, outside the Thursday triage. Here is where it stands.\n\nTwo different things are in it. A dashboard in the portal is a sprint-scale build with two data sources we have not connected — engagement data sits in Canvas, and the early funnel stages sit somewhere you have not named — so it goes into Thursday's triage as a normal request. What is possible for Monday is a one-off set of numbers, and only if you send me today: (1) the exact funnel stages and which system each one lives in, (2) one definition of \"engagement\" — active learners in the last 30 days, module completion, or submission rate — and (3) the market list agreed with finance, since finance owns markets. Without those, engineering would be guessing at what the board is looking at, and a wrong guess in a board deck is worse than a blank.\n\nIf the Monday extract jumps the queue, the person pulling it stops their current sprint work for the time it takes; I will name the specific items that slip once the team confirms who picks it up. I can't tell you now whether the numbers will be ready by Monday 9am — that depends on whether engineering can read engagement from Canvas, which they are checking.\n\nOwed to me by end of today for the Monday extract: the three definitions above. Owed by Thursday for the dashboard: the same three, plus who views it and how often. Send them to me and I will move it out of Inbox."
+  }
+}

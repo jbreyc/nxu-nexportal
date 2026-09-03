@@ -1,0 +1,87 @@
+{
+  "key": "05",
+  "model": "claude-fable-5-1",
+  "prompt_version": 1,
+  "ts": "2026-09-03T11:14:28+00:00",
+  "structured_output": {
+    "verdict": "needs-info",
+    "steelman": "A learner holding a current-term and a next-term instalment can pay just what is due now: tick the invoices, watch the total change, check out once, and return to a wallet card that shows exactly those invoices paid and the rest still open.",
+    "ambiguities": [
+      {
+        "text": "AC3 says checkout is 'for exactly the checked invoices' but Dependencies says the checkout page 'accepts an amount'. The spec does not say how the selected invoice IDs reach the payments provider, or whether the provider can apply one payment to a chosen subset of open invoices at all.",
+        "why_it_bites_mid_build": "The engineer must choose between passing invoice IDs the provider may not honour, or having myNXU allocate a lump amount across invoices itself. The second is a new allocation and reconciliation layer, not a checkout link — and a wrong guess means a learner's payment lands on the wrong invoice.",
+        "owner": "engineering",
+        "blocking": true
+      },
+      {
+        "text": "Whether referral credit or any wallet balance is applied to the 'Pay selected' sum, and if so against which invoice.",
+        "why_it_bites_mid_build": "AC2 says 'sum of the checked invoices'. Referral credits are 'credited toward tuition in the wallet'. An engineer either shows a gross total the learner then sees reduced at checkout, or nets credit into the card total — and both change what 'paid' means on the card afterwards.",
+        "owner": "requester",
+        "blocking": true
+      },
+      {
+        "text": "Whether finance permits paying a later instalment while an earlier one stays open (e.g. tick next-term only, leave current-term unpaid), and whether an overdue invoice can be unticked.",
+        "why_it_bites_mid_build": "Free checkboxes let a learner pay out of order. If finance forbids that, the checkbox needs a lock or ordering rule that is not in the spec or the ACs.",
+        "owner": "requester",
+        "blocking": true
+      },
+      {
+        "text": "What the card shows if a multi-invoice checkout partially succeeds (one invoice settled, one declined) — AC4 only covers 'a payment succeeds'.",
+        "why_it_bites_mid_build": "Depends entirely on the provider answer to the first item; if the provider settles per-invoice, partial states exist and the card needs a rule for them.",
+        "owner": "engineering",
+        "blocking": false
+      },
+      {
+        "text": "Default selection when two open invoices share the earliest due date, and whether the default re-evaluates if an invoice is settled elsewhere (e.g. finance posts a manual payment) while the card is open.",
+        "why_it_bites_mid_build": "Edge behaviour the engineer will pick silently; low cost to state now, low cost to fix later.",
+        "owner": "design",
+        "blocking": false
+      },
+      {
+        "text": "AC4's 60-second window assumes the 'invoice paid' event arrives from the provider within that time. Event latency is not stated.",
+        "why_it_bites_mid_build": "Determines whether the card can rely on the existing event or needs to poll the provider after checkout; changes the build but not the outcome.",
+        "owner": "engineering",
+        "blocking": false
+      }
+    ],
+    "untestable_criteria": [
+      {
+        "criterion": "WHEN the learner taps \"Pay selected\", THE SYSTEM SHALL take them to checkout for exactly the checked invoices.",
+        "rewrite": "WHEN the learner taps \"Pay selected\", THE SYSTEM SHALL open checkout with the amount equal to the sum of the checked invoices AND the resulting provider payment record SHALL reference exactly the checked invoice IDs and no others."
+      }
+    ],
+    "hidden_dependencies": [
+      {
+        "name": "External invoicing/payments provider",
+        "why": "The spec's outcome depends on the provider applying one payment to a learner-chosen subset of open invoices. Platform context states this capability is unknown. The spec names only 'the checkout page', not the provider or its API.",
+        "blocking": true
+      },
+      {
+        "name": "Referral programme / wallet credit (finance-set markets and amounts)",
+        "why": "Credits sit in the same wallet the card reads from and are applied 'toward tuition'; the spec's total ignores them.",
+        "blocking": true
+      },
+      {
+        "name": "'Invoice issued/paid' event on the deadline rail",
+        "why": "AC4's 60-second paid state can only be met via this event or by polling the provider; the spec does not name which, and event latency is unstated.",
+        "blocking": false
+      },
+      {
+        "name": "Support assistant Nexa",
+        "why": "Nexa answers payment and deadline questions from the learner's record; after a subset payment the record must show the remaining open invoice correctly or Nexa answers wrongly. Not in the spec's claimed scope; listed so refinement knows the blast radius.",
+        "blocking": false
+      }
+    ],
+    "size": {
+      "band": "M",
+      "confidence": 0.4,
+      "risk": "If the payments provider cannot apply a single payment to a chosen set of invoices, myNXU must build its own allocation and reconciliation layer or renegotiate with the vendor — that moves this to XL. If it can, the spec's S holds."
+    },
+    "refinement_agenda": [
+      "Get the provider answer in writing: can one checkout be applied to a named set of invoice IDs, not just an amount? If no, decide between myNXU-side allocation (resize) or narrowing to 'pay one selected invoice'.",
+      "Decide the finance rules the checkboxes must enforce: may a later instalment be paid while an earlier one is open, and does wallet/referral credit net into the 'Pay selected' total and against which invoice.",
+      "Rewrite AC3 and AC4 in terms of invoice IDs and the 'invoice paid' event, and confirm event latency supports 60 seconds or specify polling."
+    ],
+    "requester_message": "The outcome is clear and the ACs are observable — this is close. Three things are owed before it can go to the team, and they are all yours or the provider's to answer, not the team's to guess.\n\n1. Confirm with the payments provider whether one checkout can be applied to a chosen set of invoices by ID, rather than a bare amount. The spec's own Dependencies line says checkout takes an amount; the outcome needs it to take invoices. Everything else hangs on this, including the size.\n2. State the finance rules for selection: can a learner pay next-term while current-term is still open, and does referral or wallet credit reduce the \"Pay selected\" total — and if so, against which invoice.\n3. Confirm the 'invoice paid' event reaches myNXU within 60 seconds of the provider settling, or say the card may poll.\n\nBring those to triage on Thursday 10 September and this moves to Ready in that session. If the provider answer is yes, the S estimate stands. If it is no, this becomes an allocation build and will need its own sizing.\n\nThe current sprint is committed for the full two weeks. If this is pulled forward ahead of Thursday, a Ready item of equal size drops out of the next sprint — I will name which one at triage once the provider answer sets the size."
+  }
+}
