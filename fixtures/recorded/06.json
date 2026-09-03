@@ -1,43 +1,47 @@
 {
   "key": "06",
   "model": "claude-fable-5-1",
-  "prompt_version": 1,
-  "ts": "2026-09-03T11:15:10+00:00",
+  "prompt_version": 2,
+  "ts": "2026-09-03T11:45:10+00:00",
   "structured_output": {
-    "outcome": "Duplicate of #1 — fold into it at Thursday triage. Learner outcome not stated in the request; #1 states it (\"learners with no distribution channel share the referral at least once\"). Not blocking; #1 needs three refinement decisions before Ready.",
+    "outcome": "Duplicate of #1. Fold in — no new issue. The request adds one thing #1 lacks: an ops-side observation that code-copying is where sharing dies. Attach it to #1 as evidence and take #1 to Thursday triage. Learner outcome implied, not stated: a learner sends the referral at least once because the link and the explanation are done for them.",
     "urgency": {
-      "claim": "None stated. The request describes friction, not a deadline or a loss.",
-      "evidence": "One observation: learners currently copy a code and explain it themselves. No counts of learners who copy, share, drop, or ask support how referral works.",
-      "assessment": "Not urgent on the evidence given. Arrived out of process on Wednesday; joins Thursday triage in the normal order. If ops wants it ahead of the queue, it owes the numbers behind the friction claim by Thursday."
+      "claim": "None stated. The request describes friction ('they have to copy a code and explain it themselves'), not a deadline, a loss, or a date.",
+      "evidence": "None supplied. No referral counts, no support tickets, no conversion figures, no finance or market deadline.",
+      "assessment": "Not urgent on the evidence given. Goes through Thursday triage in order; it does not jump the queue. If ops has numbers (referrals sent vs codes issued, tickets asking 'what do I tell my friend'), those change the priority of #1, not the existence of this request."
     },
     "duplicate": {
       "is_duplicate": true,
       "of_issue": 1,
-      "why": "#1 already covers a dashboard card with a one-tap way to send the referral link, plus the stated exchange and a learner outcome. This request is a strict subset of #1 and adds no new scope or evidence."
+      "why": "#1 is the same ask, stated more completely: link instead of code ('link first'), the offer explained on the learner's behalf ('the exchange stated'), one-tap send from the dashboard card, plus referral state, which this request does not mention. Every clause of the request maps to a clause of #1; nothing in the request falls outside it."
     },
     "size": {
       "band": "M",
       "confidence": 0.6,
-      "risk": "If the per-learner referral link and market eligibility live only in the external programme/finance system with no API myNXU can read, this becomes L: new integration plus finance in the loop for amounts per market."
+      "risk": "Market eligibility. Amounts and eligible markets are set by finance and the platform context names no readable source. If the card must state the exchange per learner ('you get X, they get Y') and that has to come from finance's data rather than a config table the team owns, this becomes L: a finance integration and a rule for ineligible markets. A code-or-link exists today per the platform context, so link generation itself is not the risk."
     },
     "questions": [
       {
-        "text": "What is the pass/fail for 'shared' — a share-sheet tap, a link delivered, or a referred learner who starts? And what is today's baseline (how many learners copy the code, how many referrals start per month)?",
+        "text": "What do you see that says code-copying is the failure point? Ticket counts, referral codes issued vs referrals started, anything you can put beside #1 by Thursday.",
         "owner": "requester"
       },
       {
-        "text": "Does every eligible learner already have a per-learner link today, or only a code? Who issues it — the referral programme system, finance, or myNXU?",
+        "text": "Where do the per-market amounts and eligibility live today, and who owns changing them? A finance spreadsheet, a config the team can read, or nothing yet?",
         "owner": "requester"
       },
       {
-        "text": "Can myNXU read the learner's referral link and their market eligibility (finance-set markets and amounts) from an existing source, or does this need a new integration?",
-        "owner": "engineering"
+        "text": "Is there any channel (WhatsApp, SMS, email) that matters more than the others for your learners, or is one native share sheet plus copy-link enough?",
+        "owner": "requester"
       },
       {
-        "text": "Which share mechanism: native share sheet, copy-link, or a pre-filled message? What does the message say to state the exchange, and what does the card show when the learner's market is ineligible?",
+        "text": "What the shared message says in the learner's name, and what the card shows a learner in an ineligible market.",
         "owner": "design"
+      },
+      {
+        "text": "What referral state is readable from the learner's record today (link generated, friend started, credited) — enough to show state on the card, or only the code?",
+        "owner": "engineering"
       }
     ],
-    "requester_message": "Your request to share a referral link from the dashboard is already covered by open issue #1 (Refer a friend — link first, the exchange stated). I'm attaching yours to it rather than opening a second issue; it goes to triage Thursday.\n\nTwo things owed from you by Thursday so #1 can move: (1) what \"shared\" means for pass/fail — a tap, a link sent, or a referred learner who starts — and the baseline today: how many learners copy the code, how many referrals start per month. (2) Whether every eligible learner already has a link today or only a code, and which system issues it.\n\nThe current sprint is committed. Nothing in this request says it must jump the queue; if you believe it should, the numbers above are what triage weighs it on, and an item of matching size would leave the sprint to make room. Provisional size is a sprint for one person, less certain until engineering confirms myNXU can read the referral link and market eligibility without a new integration with finance's system."
+    "requester_message": "Thanks — this is already on the board as #1 (Refer a friend — link first, the exchange stated, referral state). It covers what you're asking: a link instead of a code, the offer explained for the learner, one tap to send from the dashboard. I'm folding your request into #1 rather than opening a second issue.\n\nTwo things are owed by you before Thursday triage:\n\n1. Evidence. Whatever made you write this — support tickets asking what to tell a friend, codes issued vs referrals started, anything with a number. Right now #1 has a reason but no measure, and that is what sets its place in the queue.\n2. The money. Amounts and eligible markets are set by finance. Tell me where that lives today and who owns it. If the card has to state the exchange per learner, this is the one fact that decides whether it is a sprint's work for one person or the whole team.\n\n#1 is at the door with everything else; nothing is in sprint for it yet. If you want it pulled forward at Thursday triage, the trade is explicit: it takes a slot from whatever is next in Ready, and the room decides which. Bring the evidence and the finance answer and that conversation is short."
   }
 }

@@ -1,109 +1,66 @@
 {
   "key": "01",
   "model": "claude-fable-5-1",
-  "prompt_version": 1,
-  "ts": "2026-09-03T11:10:02+00:00",
+  "prompt_version": 2,
+  "ts": "2026-09-03T11:40:35+00:00",
   "structured_output": {
-    "verdict": "needs-info",
-    "steelman": "Learners who have no natural place to post a code never share; give them one tap that hands the link to whatever channel they already use, a one-line reason to do it, a visible record that it is working, and put it in front of them at the two moments they feel proud enough to send it. Everything else about referrals stays as it is.",
+    "verdict": "ready",
+    "steelman": "Give active learners in an eligible market one card — on the dashboard, and as a dismissable toast at grade-posted and credential-earned — that states the exchange in a single line, makes the share link the one-tap primary action with the code demoted, and lists each referral as invited / started / credited with the amount, so learners with no channel of their own share at least once.",
     "ambiguities": [
       {
-        "text": "\"One-tap way to send it\" is not defined. Native share sheet (Web Share API, absent on most desktop browsers), copy-to-clipboard, or a channel picker are three different builds with three different fallbacks.",
-        "why_it_bites_mid_build": "The engineer picks one on the first day; if it is copy-link on desktop and share-sheet on mobile, the 'share tap' metric counts two different acts and design has not seen the fallback state.",
+        "text": "The one-line copy must state what the friend gets and what the learner gets, but incentive amounts are out of scope and the named dependency (referral service) only exposes per-referral state and the credited amount — not the market's offer amounts. Where does the card read 'what you get / what they get' from: referral service, a finance-owned config, or hard-coded copy per market?",
+        "why_it_bites_mid_build": "The engineer reaches the copy line and finds no field to bind; either builds a config/backend read (S becomes M) or hard-codes amounts finance can change without telling the team.",
+        "owner": "engineering",
+        "blocking": false
+      },
+      {
+        "text": "'Course grade posted' — the platform event is 'grade posted' (from Canvas), which fires on weekly assignment grades as well as final course grades. Which one triggers the toast, is there a frequency cap, and does a failing grade suppress it?",
+        "why_it_bites_mid_build": "Two courses × weekly assignments means up to ~16 toasts a term if it's any grade; the engineer either filters on a field that may not exist in the event or ships a toast that fires after every assignment, including fails.",
+        "owner": "requester",
+        "blocking": false
+      },
+      {
+        "text": "Grades post in Canvas while the learner may not be in myNXU. Does the toast fire on the next dashboard load, only in-session, once per event, and does dismissal persist across sessions/devices?",
+        "why_it_bites_mid_build": "Events today feed the deadline rail (a list), not in-session toasts; 'show as a toast when X happens' has no delivery semantics until this is decided, and the engineer picks one.",
         "owner": "design",
-        "blocking": true
+        "blocking": false
       },
       {
-        "text": "Toast trigger rules are unstated: 'course grade posted' vs the platform's 'grade posted' event (which fires per assignment, weekly, across two courses); no cap, no once-per-event rule, no dismissal memory.",
-        "why_it_bites_mid_build": "Built literally, a learner gets a referral toast every Friday per course for 8 weeks. The engineer will invent a cap or a dedupe key and it will be wrong for the metric.",
-        "owner": "requester",
-        "blocking": true
-      },
-      {
-        "text": "Toast delivery is unstated: on next dashboard load after the event, or pushed into a live session? Grade posting happens while the learner is in Canvas, not on the dashboard.",
-        "why_it_bites_mid_build": "On-load needs a 'pending toast' flag per event; live needs a client event channel the shell may not have. Different size, different backend, and the spec claims no new backend.",
-        "owner": "engineering",
-        "blocking": true
-      },
-      {
-        "text": "Referral-state line with N referrals: full list, latest only, or aggregate counts (3 invited / 1 started / 1 credited, £X)? Card height on variant B is fixed by position.",
-        "why_it_bites_mid_build": "A learner with twelve invites breaks the card layout; the engineer will truncate or scroll on their own.",
+        "text": "'Share link as the primary action' — what does the tap do: native share sheet, copy to clipboard, or a channel picker? And is the UTM already on the link the referral service issues, or appended by myNXU?",
+        "why_it_bites_mid_build": "The Goal is measured from the link's UTM; if the link has no UTM today the measurement plan is unbuildable, and the share mechanism changes the tap count the goal is counting.",
         "owner": "design",
-        "blocking": true
-      },
-      {
-        "text": "Source of the amounts in the exchange line ('what the friend gets, what you get'). Amounts are per market and set by finance; incentive amounts are out of scope, but the copy must render them.",
-        "why_it_bites_mid_build": "If the referral service does not return the market's amounts, the engineer hardcodes or adds a config read — and the card shows a stale number in a market finance changed.",
-        "owner": "requester",
-        "blocking": true
-      },
-      {
-        "text": "'When' in the exchange line and 'started' in the state line: does 'start' mean enrolment, first course day, or first paid instalment? The platform says credit lands 'when the referred learner starts' without defining it.",
-        "why_it_bites_mid_build": "Copy says 'when they start' while the state line flips to 'started' at a different moment; support tickets follow.",
-        "owner": "requester",
         "blocking": false
       },
       {
-        "text": "'WHEN a referral changes state, show it' — read on dashboard load, or reflect live? Platform events available today do not include referral-state-changed or wallet-credited; the Dependencies section asserts the latter is observable without evidence.",
-        "why_it_bites_mid_build": "Read-on-load satisfies the AC and is cheap; the engineer will do that and the assertion in Dependencies stays unverified. Confirm which is meant so the claim is either used or deleted.",
-        "owner": "engineering",
-        "blocking": false
-      },
-      {
-        "text": "Where the share-tap event and the link's UTM land. 'Measured in-sprint' puts instrumentation in scope, but no analytics sink or landing page is named.",
-        "why_it_bites_mid_build": "The engineer emits a tap event to whatever exists; if nothing consumes UTM on the landing page, the goal cannot be measured and no one notices until sprint review.",
-        "owner": "engineering",
-        "blocking": false
-      },
-      {
-        "text": "Currency and number formatting for the credited amount across markets.",
-        "why_it_bites_mid_build": "Minor; engineer defaults to the learner's market currency. Confirm that is the wallet's currency.",
-        "owner": "engineering",
+        "text": "The referral-state line: how many referrals does the card list (all, last N with a count), and in what order? A learner with twenty invites makes the card a table.",
+        "why_it_bites_mid_build": "Card height on the dashboard (variant B position is a Keep) breaks with an unbounded list; the engineer caps it arbitrarily or ships an unbounded card.",
+        "owner": "design",
         "blocking": false
       }
     ],
-    "untestable_criteria": [
-      {
-        "criterion": "Goal: share taps per active learner per month; referred starts per 100 active learners. Measured in-sprint.",
-        "rewrite": "Baseline share taps and referred starts for the trailing 30 days before release are recorded; after two weeks live, share taps per active learner in eligible markets ≥ [target] and referred starts per 100 active learners ≥ [target]; both read from the named analytics sink."
-      },
-      {
-        "criterion": "THE SYSTEM SHALL state, in one line above the action, what the friend gets, what the learner gets, where it lands (the wallet) and when.",
-        "rewrite": "The exchange line renders the learner's market friend-amount and learner-amount from [named source], the word 'wallet', and the trigger phrase [defined 'start'], and does not wrap at 360px viewport width in the dashboard card or the toast."
-      }
-    ],
+    "untestable_criteria": [],
     "hidden_dependencies": [
       {
-        "name": "Finance market/amount configuration",
-        "why": "The exchange line and the credited-amount line need the per-market amounts finance owns. The spec puts amounts out of scope but cannot render without reading them from somewhere; if the referral service does not expose them, this is a new read.",
-        "blocking": true
-      },
-      {
-        "name": "Client-side event delivery for the toast",
-        "why": "Grade-posted and credential-earned drive the deadline rail, which is rendered from stored state. A toast 'at' the event needs either a pending-toast marker per event or a live channel to the session. Neither is named; the size claim of 'no new backend' rests on it.",
-        "blocking": true
-      },
-      {
-        "name": "Analytics sink and referral landing page (UTM)",
-        "why": "'Measured from the link's UTM' assumes a landing page that captures UTM and a pipeline the team can query in-sprint. Neither is in the platform context.",
+        "name": "Finance-owned per-market incentive amounts",
+        "why": "The platform context says markets and amounts are set by finance. The spec names the referral service for per-referral state and credited amount, but not a readable source for the offer amounts the copy line must show. If none exists, the card needs config or a backend read — this is the S-to-M risk.",
         "blocking": false
       },
       {
-        "name": "Referral-state / wallet-credit event",
-        "why": "Dependencies asserts the wallet credit event is observable to the dashboard; the platform's event list does not include it. Not needed if state is read on load, but the spec should stop claiming it or engineering should confirm it.",
+        "name": "Analytics / UTM attribution",
+        "why": "The Goal is measured in-sprint from the link's UTM and share taps, but the platform context names no analytics pipeline and no share-tap event. Instrumenting the tap and attributing referred starts to the link is work the S estimate does not carry.",
         "blocking": false
       }
     ],
     "size": {
-      "band": "M",
-      "confidence": 0.6,
-      "risk": "Toast delivery. If grade-posted and credential-earned are not pushed to the learner's session, the toast needs a pending-notification store keyed per event with dismissal memory — that is new backend and moves this to L. If they are, and the referral service already returns market amounts, it drops back to S."
+      "band": "S",
+      "confidence": 0.55,
+      "risk": "If the referral service does not expose per-market offer amounts (what the friend gets / what the learner gets), the card needs a config or backend read plus a finance handshake, and the band moves to M."
     },
     "refinement_agenda": [
-      "Decide what the primary tap does on mobile and on desktop (share sheet vs copy-link), what the fallback looks like, and where the tap event and the UTM are recorded — so 'share tap' means one thing in the metric.",
-      "Decide the toast rules: which events (course final grade only, or every assignment grade), one toast per event or a cap per week, delivery on next dashboard load vs live, and whether dismissal is remembered.",
-      "Decide the single source for market amounts and the definition of 'started' so the exchange line and the state line read the same config and flip at the same moment."
+      "Decide the source of the offer amounts in the copy line (referral service field, finance config, or per-market copy) and who is notified when finance changes them — this settles S vs M.",
+      "Decide the toast policy: final course grade only or any grade; once per event; fires on next dashboard load; dismissal persists; suppressed below a grade threshold or not.",
+      "Rewrite criterion 3 to an observable: 'On dashboard load, the card lists the learner's referrals (capped at N, newest first) with state invited / started / credited and the credited amount as of the last referral-service read' — and confirm the share link already carries a UTM."
     ],
-    "requester_message": "@jose — this is close, but four things would make an engineer guess on day one, and the size claim of S depends on one of them.\n\nWhat is owed from you, before triage:\n1. Toast rules. The platform's grade-posted event fires per assignment, weekly, per course. Say whether the toast is for the course final grade only or every grade, how many a learner can see in a week, and whether a dismissed toast stays dismissed.\n2. Where the amounts come from. Incentive amounts are out of scope, but the card prints them. Tell us whether the referral service returns the market's friend/learner amounts or whether finance holds them somewhere we have to read.\n3. Define 'start'. The copy says credit lands 'when they start' and the state line flips to 'started'. Enrolment, first course day, or first paid instalment — pick one.\n\nOwed from design: what the primary tap does on desktop where there is no share sheet, and how the state line behaves with ten referrals on a fixed-height card.\n\nOwed from engineering: whether grade-posted and credential-earned can reach a live session, or whether the toast is shown on next dashboard load. That answer sets the size — S if events are already reachable and amounts come from the service, M otherwise, L if we need a pending-notification store.\n\nTriage is Thursday; today's is under way, so the next one this can enter with answers is 10 September. The current sprint is committed. If this jumps the queue at that triage, the lowest item in Ready slips a sprint — come with the name of what you would trade, and it goes on the agenda with the three decisions above."
+    "requester_message": "@jose — the referral card spec is ready for Thursday triage as an S. Nothing blocks it. Two things you can bring on Thursday that would take the guesswork out of refinement: (1) where the per-market 'what your friend gets / what you get' amounts live today, if you know — the referral service, a finance sheet, or nowhere readable; if nowhere, this becomes an M because someone has to build the read. (2) Your call on the toast: after every grade posting or only the final course grade, and whether it fires after a fail. Everything else — share-sheet vs copy, how many referrals the card lists, toast delivery on next load — the designer and an engineer settle in the room. I don't have the board in front of me, so I won't claim what's In Sprint; if you want this ahead of the current sprint's queue, triage will name the S-sized item it displaces and you choose. No date from me — triage sets it."
   }
 }
