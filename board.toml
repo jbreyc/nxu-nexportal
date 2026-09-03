@@ -1,0 +1,26 @@
+owner = "jbreyc"
+project_number = 1
+project_id = "PVT_kwHOAeimls4BiVeg"
+
+[fields]
+status = "PVTSSF_lAHOAeimls4BiVegzhhN6CA"
+reason = "PVTSSF_lAHOAeimls4BiVegzhhN6Cw"
+size = "PVTSSF_lAHOAeimls4BiVegzhhN6C0"
+requester = "PVTF_lAHOAeimls4BiVegzhhN6C4"
+
+[options.status]
+"Inbox" = "1a2ba302"
+"Triaged" = "afc37290"
+"Drafted" = "827bcbe9"
+"Ready" = "441e36a0"
+"In Sprint" = "ddadbdc5"
+"Done" = "bda03b6c"
+
+[options.reason]
+"Needs-info" = "e929936f"
+
+[options.size]
+"S" = "1184de17"
+"M" = "5b42f9c6"
+"L" = "fb4e34d3"
+"XL" = "9e1a4190"
