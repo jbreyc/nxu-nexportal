@@ -11,4 +11,4 @@ The gate judges hidden dependencies against this file, not against vibes. Every 
 - **Credentials stack:** coursework counts toward certificates inside the degree; a learner cannot enrol in a second programme while one is active.
 - **The support assistant "Nexa"** answers programme, payment and deadline questions from the catalogue and the learner's own record.
 - **The team:** a small engineering team, one designer, no dedicated PM until now. Board states: Inbox → Triaged → Drafted → Ready → In Sprint → Done. Triage is Thursday; a sprint is two weeks.
-- **Events available to myNXU today:** grade posted, credential earned, invoice issued/paid, document status changed, registration window opened — they drive the deadline rail.
+- **Events available to myNXU today:** assignment due (from Canvas), grade posted, credential earned, invoice issued/paid, document status changed, registration window opened — they drive the deadline rail.
