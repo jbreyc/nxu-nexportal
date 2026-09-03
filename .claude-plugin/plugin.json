@@ -1,0 +1,8 @@
+{
+  "name": "nexportal-gate",
+  "displayName": "NexPortal readiness gate",
+  "description": "A readiness gate at two positions of NexPortal's operating model: /intake at the door, /gate before refinement. One enforced rule — no Ready without a fresh NX-GATE record — guarded at `nexportal-gate flip` and locked against raw board writes by a PreToolUse hook.",
+  "version": "0.1.0",
+  "author": {"name": "Jose Brey"},
+  "homepage": "https://github.com/jbreyc/nxu-nexportal"
+}
