@@ -77,6 +77,10 @@ def set_body(gh, repo: str, number: int, body: str) -> None:
     gh(["issue", "edit", str(number), "--repo", repo, "--body-file", "-"], stdin=body)
 
 
+def close_issue(gh, repo: str, number: int, comment_text: str) -> None:
+    gh(["issue", "close", str(number), "--repo", repo, "--comment", comment_text])
+
+
 def _outcome_of(item: dict) -> str:
     rec = records.newest_record(item.get("comments") or [], records.INTAKE_MARKER)
     if rec and (rec.get("tier2") or {}).get("outcome"):

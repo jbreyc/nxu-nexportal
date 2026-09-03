@@ -194,6 +194,19 @@ def cmd_audit(args) -> int:
     return 1
 
 
+def cmd_seed(args) -> int:
+    from .seed import Seeder
+    root, prompts, platform, recorded = _paths(args)
+    gh = board.gh_run
+    repo = _repo(args, gh)
+    seeder = Seeder(gh, board.load_board(Path(args.board)), repo, _client(args, prompts, recorded),
+                    prompts_dir=prompts, platform=platform, model=args.model,
+                    fixtures_dir=root / "fixtures", seed_dir=root / "seed")
+    summary = seeder.run()
+    print(json.dumps(summary, indent=2))
+    return 0
+
+
 def cmd_board_ids(args) -> int:
     print(board.board_ids(board.gh_run, args.owner, args.project), end="")
     return 0
@@ -239,6 +252,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--out", default=None, help="default: fixtures/results.md")
     _add_common(p, github=False)
     p.set_defaults(fn=cmd_fixtures)
+
+    p = sub.add_parser("seed", help="seed the demo repo and board with the fixtures and the fillers (live)")
+    _add_common(p)
+    p.set_defaults(fn=cmd_seed)
 
     p = sub.add_parser("board-ids", help="render board.toml from the live project")
     p.add_argument("--owner", required=True)
