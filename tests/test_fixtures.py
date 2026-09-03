@@ -132,3 +132,11 @@ def test_cli_gate_file_offline_prints_the_comment(capsys, tmp_path):
     rc = main(["gate", "--file", "fixtures/01-referral-brief.md", "--replay", "--recorded-dir", str(recorded)])
     out = capsys.readouterr().out
     assert rc == 0 and out.startswith("NX-GATE: ready\n") and "body_sha256" in out
+
+
+def test_title_cuts_at_a_word_boundary_and_drops_the_sentence_end():
+    from nexportal_gate.__main__ import _title
+    long = "Show on the course-load card how many days are left to add a second course, the first week of term. Students keep missing the window."
+    t = _title(long)
+    assert len(t) <= 72 and not t.endswith("cour") and t.endswith("second") or t.endswith("course,")
+    assert _title("Can we get an AI chatbot, this sprint? More text.") == "Can we get an AI chatbot, this sprint"

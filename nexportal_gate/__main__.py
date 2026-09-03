@@ -68,8 +68,12 @@ def _repo(args, gh) -> str:
 
 
 def _title(text: str) -> str:
+    """The first sentence, ≤ 72 characters, cut at a word boundary."""
     first = re.split(r"(?<=[.?!])\s", text.strip(), maxsplit=1)[0].rstrip(".?!")
-    return first[:72].rstrip() if len(first) > 72 else first
+    if len(first) <= 72:
+        return first
+    cut = first[:73].rsplit(" ", 1)[0].rstrip(" ,;:")
+    return cut or first[:72]
 
 
 # --- commands -----------------------------------------------------------------------------------
