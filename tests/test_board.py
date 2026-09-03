@@ -139,11 +139,11 @@ def test_set_field_variants():
     gh = FakeGh([(("project", "item-edit"), "")])
     board.set_field(gh, CFG, "I", "status", option="Ready")
     board.set_field(gh, CFG, "I", "reason", option=None)
-    board.set_field(gh, CFG, "I", "requester", text="@fadl")
+    board.set_field(gh, CFG, "I", "requester", text="@ceo")
     a, b, c = (argv for argv, _ in gh.calls)
     assert a[a.index("--single-select-option-id") + 1] == "o_rd" and a[a.index("--project-id") + 1] == "PVT_x"
     assert "--clear" in b and b[b.index("--field-id") + 1] == "F_REASON"
-    assert c[c.index("--text") + 1] == "@fadl"
+    assert c[c.index("--text") + 1] == "@ceo"
     with pytest.raises(board.BoardError):
         board.set_field(gh, CFG, "I", "size", option="XXL")
 

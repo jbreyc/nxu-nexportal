@@ -39,11 +39,11 @@ def test_structure_check_placeholder_requester():
 
 
 def test_structure_check_short_text():
-    assert intake.structure_check("chatbot", "fadl")[0].check == "request"
+    assert intake.structure_check("chatbot", "ceo")[0].check == "request"
 
 
 def test_structure_check_ok():
-    assert intake.structure_check(CEO, "fadl") == []
+    assert intake.structure_check(CEO, "ceo") == []
 
 
 # --- shortlist ----------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ def test_run_intake_rejected_without_a_call():
 
 
 def test_run_intake_triaged():
-    r = run(CEO, adversary.FakeClient({"k": out()}), requester="fadl", weekday="Tuesday")
+    r = run(CEO, adversary.FakeClient({"k": out()}), requester="ceo", weekday="Tuesday")
     assert r.status == "triaged" and r.duplicate_of is None and r.tier2 == out()
     assert r.prompt_version == 2 and r.model == "m" and r.failures == []
 
@@ -115,5 +115,5 @@ def test_run_intake_says_none_when_no_candidates():
             self.user = user
             return out()
     spy = Spy()
-    run(CEO, spy, requester="fadl")
+    run(CEO, spy, requester="ceo")
     assert "none" in spy.user.split("## Open issues", 1)[1].split("## Platform", 1)[0]

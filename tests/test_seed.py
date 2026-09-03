@@ -148,7 +148,7 @@ def test_issue_two_keeps_needs_info_and_carries_the_refused_flip():
 
 def test_issue_three_is_drafted_with_open_questions_and_fails_tier_one():
     gh, client, _ = run_seed()
-    assert gh.items[3]["status"] == "Drafted" and gh.items[3]["size"] == "XL" and gh.items[3]["requester"] == "@fadl"
+    assert gh.items[3]["status"] == "Drafted" and gh.items[3]["size"] == "XL" and gh.items[3]["requester"] == "@ceo"
     assert gh.issues[3]["body"].startswith("# ") and "NX-OPEN-QUESTION:" in gh.issues[3]["body"]
     assert markers(gh, 3) == ["NX-INTAKE: triaged", "NX-GATE: needs-info"]
     assert "issue-3" not in client.keys                       # Tier 1 failed: no model call

@@ -1,7 +1,7 @@
 from nexportal_gate import draft, shape, text
 
 REC = {
-    "schema": "nx-intake/1", "status": "triaged", "requester": "fadl",
+    "schema": "nx-intake/1", "status": "triaged", "requester": "ceo",
     "request": "Can we get an AI chatbot, this sprint?",
     "tier2": {
         "outcome": "Learners get answers to programme questions without waiting for support.",
@@ -36,13 +36,13 @@ def test_draft_fills_outcome_size_requester():
     secs = text.sections(draft.render_draft(REC, title="AI chatbot"))
     assert secs["outcome"] == REC["tier2"]["outcome"]
     assert secs["size"].startswith("XL —") and "scope unbounded" in secs["size"]
-    assert secs["requester"] == "@fadl"
+    assert secs["requester"] == "@ceo"
     assert shape.RULES["size"](secs["size"]) is None
 
 
 def test_draft_does_not_double_the_handle():
-    secs = text.sections(draft.render_draft(dict(REC, requester="@fadl"), title="t"))
-    assert secs["requester"] == "@fadl"
+    secs = text.sections(draft.render_draft(dict(REC, requester="@ceo"), title="t"))
+    assert secs["requester"] == "@ceo"
 
 
 def test_draft_keeps_the_original_request_for_provenance():

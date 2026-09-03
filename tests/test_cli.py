@@ -88,7 +88,7 @@ def test_intake_record_key_is_content_addressed(tmp_path, capsys):
     key = cli.intake_key(text)
     assert key.startswith("intake-") and len(key) == len("intake-") + 8 and key == cli.intake_key(text + " ")
     d = recorded(tmp_path, key, intake_out())
-    rc = cli.main(["intake", text, "--requester", "fadl", "--replay", "--recorded-dir", str(d),
+    rc = cli.main(["intake", text, "--requester", "ceo", "--replay", "--recorded-dir", str(d),
                    "--open-issues", "fixtures/open-issues.json", "--dry-run"])
     assert rc == 0 and capsys.readouterr().out.startswith("NX-INTAKE: triaged")
 

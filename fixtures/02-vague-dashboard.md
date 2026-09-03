@@ -2,7 +2,7 @@
 id: "02"
 entry: gate
 title: "Improve the dashboard so students engage more"
-requester: fadl
+requester: ceo
 weekday: Tuesday
 ---
 ## Outcome
@@ -37,4 +37,4 @@ M — a few tweaks to the dashboard, maybe a week.
 
 ## Requester
 
-@fadl (CEO)
+@ceo

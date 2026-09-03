@@ -56,7 +56,7 @@ def test_load_fixtures_parses_frontmatter_in_id_order():
     fx = fixtures.load_fixtures(FIXTURES)
     assert [f.id for f in fx] == ["01", "02", "03", "04", "05", "06"]
     ceo = fx[2]
-    assert (ceo.entry, ceo.requester, ceo.weekday) == ("intake", "fadl", "Tuesday")
+    assert (ceo.entry, ceo.requester, ceo.weekday) == ("intake", "ceo", "Tuesday")
     assert ceo.text.startswith("Can we get an AI chatbot") and ceo.title == "AI chatbot, this sprint"
     assert fx[0].entry == "gate" and fx[0].text.startswith("## Outcome")
 

@@ -45,11 +45,11 @@ def test_gate_comment_tier1_failure_names_first_check_and_the_command():
 
 def test_intake_comment_round_trip():
     r = IntakeResult("triaged", INTAKE_OUT, None, [], 1, "m", [1], [])
-    c = records.render_intake_comment(r, requester="fadl", text="Can we get an AI chatbot?")
+    c = records.render_intake_comment(r, requester="ceo", text="Can we get an AI chatbot?")
     assert c.startswith("NX-INTAKE: triaged\n")
     rec = records.parse_record(c)
     assert rec["_marker"] == records.INTAKE_MARKER and rec["status"] == "triaged"
-    assert rec["requester"] == "fadl" and rec["request"] == "Can we get an AI chatbot?"
+    assert rec["requester"] == "ceo" and rec["request"] == "Can we get an AI chatbot?"
     assert rec["tier2"] == INTAKE_OUT and rec["schema"] == "nx-intake/1" and rec["shortlist"] == [1]
 
 
