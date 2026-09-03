@@ -42,7 +42,7 @@ The six pre-registered cases: [`fixtures/results.md`](fixtures/results.md) (prom
 ```
 git clone https://github.com/jbreyc/nxu-nexportal && cd nxu-nexportal
 python3 -m nexportal_gate fixtures --replay      # the six cases from the recorded responses → fixtures/results.md
-python3 -m pytest -q                             # 124 tests, no network, no model
+python3 -m pytest -q                             # 133 tests, no network, no model
 python3 -m nexportal_gate gate --file fixtures/02-vague-dashboard.md --replay   # one record, printed
 ```
 
