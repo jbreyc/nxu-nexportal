@@ -1,7 +1,7 @@
 ---
 title: "Refer a friend — the reward stated, the code visible, one-tap share, progress"
 version: 3
-note: "v3 — the brief redefined from the Q3 assessment: value proposition with real amounts; the code always visible; one-tap share per app with pre-filled copy; a QR for in-person sharing; lifetime progress; no eligibility pill."
+note: "v3 — the brief redefined (second pass: the QR is attributed through the link, not counted as a tap) from the Q3 assessment: value proposition with real amounts; the code always visible; one-tap share per app with pre-filled copy; a QR for in-person sharing; lifetime progress; no eligibility pill."
 ---
 ## Outcome
 
@@ -19,7 +19,8 @@ Active learners in an eligible market, on the dashboard. Two moments: alone, dec
 - [ ] THE SYSTEM SHALL render a high-contrast QR code beside the code, encoding the referral link, sized to be scanned from a phone screen.
 - [ ] THE SYSTEM SHALL render one progress line from the referral service's counts — "{joined} friends joined · {earned} earned" — and append "· {pending} pending" when any referral is pending.
 - [ ] WHEN the learner is not in an eligible market, THE SYSTEM SHALL render no card and no eligibility pill.
-- [ ] WHEN a share button, the copy action or the QR is used, THE SYSTEM SHALL emit one `referral_share` event with the channel: whatsapp, sms, telegram, email, copy or qr.
+- [ ] WHEN a share button or the copy action is tapped, THE SYSTEM SHALL emit one `referral_share` event with the channel: whatsapp, sms, telegram, email or copy.
+- [ ] THE SYSTEM SHALL encode in the QR the referral link with a `qr` channel parameter, so that an enrolment through it is attributed to the QR by the referral service.
 
 ## Design
 
@@ -31,7 +32,7 @@ Out of scope: the amounts and market eligibility themselves (finance's); the ref
 
 ## Dependencies
 
-The referral service returns, for the learner's market: eligibility, `friend_amount`, `learner_amount`, currency, the code, the link, and the counts (joined, pending, earned total) — the response is confirmed in refinement; a market without amounts is ineligible. Share deep links need no SDK: `wa.me`, `sms:`, `t.me/share`, `mailto:`. A QR generator in the front end (an existing one, or a small library). The dashboard's event pipeline carries `referral_share`.
+The referral service returns, for the learner's market: eligibility, `friend_amount`, `learner_amount`, currency, the code, the link, and the counts (joined, pending, earned total) — the response is confirmed in refinement; a market without amounts is ineligible. Share deep links need no SDK: `wa.me`, `sms:`, `t.me/share`, `mailto:`. A QR generator in the front end (an existing one, or a small library). The dashboard's event pipeline carries `referral_share`. The referral service attributes an enrolment to the channel parameter on the link it was reached through — confirmed in refinement.
 
 ## Out of scope
 
