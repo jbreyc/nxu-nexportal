@@ -1,0 +1,9 @@
+{
+  "01": {"verdict": "ready", "tier1_failed": false, "size_band": "S", "size_confidence_min": 0.7, "blocking_ambiguities_max": 0},
+  "02": {"verdict": "needs-info", "blocking_ambiguities_min": 3, "ambiguity_owners_include": ["requester", "design"]},
+  "03": {"status": "triaged", "size_band": "XL", "size_confidence_max": 0.5, "question_owners_include": ["requester"],
+         "message_mentions_all": ["Thursday"], "message_mentions_any": ["displac", "move", "instead", "bump", "out of the sprint", "drops"]},
+  "04": {"status": "triaged", "size_band": "M", "question_owners_include": ["requester"], "message_mentions_all": ["Thursday", "Monday"]},
+  "05": {"verdict": "needs-info", "tier1_failed": false, "hidden_dependency_mentions_any": ["payment", "invoice", "provider", "partial"]},
+  "06": {"status": "duplicate", "duplicate_of": 1}
+}
