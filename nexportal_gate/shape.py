@@ -2,8 +2,7 @@
 
 Fails closed. The first failure is the one the record names; the rest are listed after it. Rules,
 in order: no open question riding the body (the airlock), every section present and non-empty
-once HTML comments are stripped, then the per-section rules. Reference: the factory's
-check_task.py (sections map, error list) — reimplemented small. "Outcome is one sentence" stays
+once HTML comments are stripped, then the per-section rules. "Outcome is one sentence" stays
 advisory (the form's placeholder says so); counting sentences reliably is not worth a false refusal.
 """
 import re

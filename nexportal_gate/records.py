@@ -2,7 +2,7 @@
 
 One comment per run. Line 1 at column 0 is the marker and the verdict (`NX-GATE: ready`,
 `NX-INTAKE: duplicate`); readers match by prefix with no whitespace tolerance — an indented or
-blockquoted marker is prose, not a record (the factory's marker discipline, reimplemented). Then a
+blockquoted marker is prose, not a record. Then a
 human summary; then exactly one fenced JSON payload, the machine-read record. `body_sha256` in a
 gate record is what the wall compares against the body as it is now.
 """

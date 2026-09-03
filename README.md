@@ -1,6 +1,6 @@
 # nxu-nexportal — a readiness gate for NexPortal
 
-A working prototype of the AI piece of NexPortal's operating model: a **readiness gate** at two positions — `intake` at the door (a raw request), `gate` before refinement (a drafted spec) — so nothing unscoped reaches an engineer, and **one enforced rule**: no card moves to Ready without a fresh gate record for the body as it is now. Built for the surfaces the team already has — GitHub issues, a Projects board, the terminal, Claude Code — and scaled down from the [Yellow Robots dev factory](https://github.com/yellow-robots/factory). The writeup is [`WRITEUP.md`](WRITEUP.md); the board is [jbreyc/projects/1](https://github.com/users/jbreyc/projects/1); one issue end to end, recorded, is below.
+A working prototype of the AI piece of NexPortal's operating model: a **readiness gate** at two positions — `intake` at the door (a raw request), `gate` before refinement (a drafted spec) — so nothing unscoped reaches an engineer, and **one enforced rule**: no card moves to Ready without a fresh gate record for the body as it is now. Built for the surfaces the team already has — GitHub issues, a Projects board, the terminal, Claude Code. The writeup is [`WRITEUP.md`](WRITEUP.md); the board is [jbreyc/projects/1](https://github.com/users/jbreyc/projects/1); one issue end to end, recorded, is below.
 
 ![one issue end to end](demo/nexportal-gate.gif)
 
@@ -75,11 +75,5 @@ board.toml        the board's identifiers (rendered by `nexportal-gate board-ids
 
 ## Assumptions, stated
 
-- [`context/platform.md`](context/platform.md) is what the gate knows about NexPortal. Correct it and the judgement moves with it.
+- [`context/platform.md`](context/platform.md) is everything the gate knows about NexPortal — the facts the fixtures and the specs on the board lean on. Correct it and the judgement moves with it.
 - The team runs Claude Code. The adversary is `claude -p --json-schema` on the existing subscription — no SDK, no API key. If not, `adversary.py`'s `Client` protocol takes a small SDK client.
-- `fixtures/open-issues.json` mirrors the seed order (#1, #2, #5 and the open fillers), so the offline duplicate check reads the same board the live one did.
-- The web UI can still drag a card to Ready. `audit` names it; nothing here pretends otherwise.
-
-## Provenance
-
-Scaled down from the [factory](https://github.com/yellow-robots/factory): the patterns kept are *the model proposes, the gate disposes*; records on the trail with a marker readers match at column 0; the board as the system of record; fail-closed to the human at the one-way door. Left out on purpose: dispatch, the runner, epics, the ledger, the bench, the process model. Freshness by body hash instead of timestamps is the one thing that goes back the other way.

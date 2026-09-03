@@ -9,7 +9,7 @@ Ready items that would fail the rule — the door that cannot be locked (the web
 visible.
 
 `gh` is always injected as a callable — `gh(argv, *, stdin=None) -> stdout` — so every path is
-unit-testable with no live GitHub (the factory's seam, reimplemented).
+unit-testable with no live GitHub.
 """
 from __future__ import annotations
 
