@@ -1,7 +1,7 @@
 ---
 title: "Refer a friend — the reward stated, the code visible, one-tap share, progress"
 version: 3
-note: "v3 — the brief redefined (second pass: the QR is attributed through the link, not counted as a tap) from the Q3 assessment: value proposition with real amounts; the code always visible; one-tap share per app with pre-filled copy; a QR for in-person sharing; lifetime progress; no eligibility pill."
+note: "v3 — the referral brief as it stands in Part 0 Q3 (second pass: the QR is attributed through the link, not counted as a tap): value proposition with real amounts; the code always visible; one-tap share per app with pre-filled copy; a QR for in-person sharing; lifetime progress; no eligibility pill."
 ---
 ## Outcome
 
