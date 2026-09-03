@@ -2,50 +2,44 @@
   "key": "02",
   "model": "claude-fable-5-1",
   "prompt_version": 2,
-  "ts": "2026-09-03T18:06:41+00:00",
+  "ts": "2026-09-03T11:41:35+00:00",
   "structured_output": {
     "verdict": "needs-info",
-    "steelman": "The CEO wants myNXU's home to be a destination rather than a pass-through to Canvas: on login a student should see something worth returning for — what's due, what's next, what changed — so return visits rise. The spec does not say this; it states no outcome, metric or content, so the first finding is that the ask itself is undefined.",
+    "steelman": "The strongest reading: students open myNXU rarely because the dashboard gives them no reason to return between Canvas sessions, so the CEO wants the landing view to surface something students act on each login, measured by return visits. That reading is constructed, not stated — the spec names no problem, no metric, no segment and no observation that prompted it, so it is underspecified on its own terms.",
     "ambiguities": [
       {
-        "text": "\"Engage more\" has no definition: no metric (return visits, sessions/week, time-to-Canvas, deadline-rail clicks), no baseline, no target, no measurement window.",
-        "why_it_bites_mid_build": "An engineer cannot choose between surfacing new content, a visual refresh, notifications or a Nexa entry point — each optimises a different number — and nothing can be declared done.",
+        "text": "What 'engage more' means and how it is measured: return visits per week, distinct login days, actions taken from the dashboard, time-to-act on a deadline — and the current baseline.",
+        "why_it_bites_mid_build": "Every candidate change (deadline summary, progress widget, referral nudge, streaks) targets a different metric; without one, the team builds a guess and cannot tell if it worked.",
         "owner": "requester",
         "blocking": true
       },
       {
-        "text": "No stated reason why students do not return today (what they say, what the CEO has seen, what the numbers show).",
-        "why_it_bites_mid_build": "Without the cause, the team will build for the assumed one; if students skip the dashboard because everything they need is in Canvas, a redesign of the shell changes nothing.",
+        "text": "What prompted the request — what did you see (analytics, a student complaint, a board question, a competitor) that says the dashboard is the problem rather than notifications, Canvas or the mobile experience?",
+        "why_it_bites_mid_build": "The observation decides the surface. If students never reach the dashboard, redesigning it moves nothing; the fix is an email or push, which is a different spec.",
+        "owner": "requester",
+        "blocking": true
+      },
+      {
+        "text": "Which students: all, new starters in their first month, learners in SAP warning/probation, learners with open invoices, or learners between terms?",
+        "why_it_bites_mid_build": "The content that brings a first-month starter back (next assignment, ID upload deadline) differs from what brings back a between-terms learner (course selection window, invoice). One dashboard cannot lead with both.",
         "owner": "requester",
         "blocking": false
       },
       {
-        "text": "\"Something that makes them want to come back\" names no content. Is it existing events (deadline rail already carries due dates, grades, invoices, documents, registration) rearranged, or new data such as Canvas module progress, which may not be readable from myNXU?",
-        "why_it_bites_mid_build": "Existing events is days of work; Canvas item-level completion is an unknown integration and could be infeasible.",
+        "text": "'Something that makes them want to come back' — which content: the next dated items from the deadline rail, course progress from Canvas, grades, wallet/referral credit, a Nexa prompt?",
+        "why_it_bites_mid_build": "The team can settle this in the room once the metric and segment are fixed, but the choice sets size: rail events are available today; module-level progress from Canvas is unknown.",
         "owner": "design",
         "blocking": false
       },
       {
-        "text": "Design says \"n/a — no UI\" while the third criterion is \"look modern and clean\". A dashboard change is entirely UI.",
-        "why_it_bites_mid_build": "Engineering starts without a design and rebuilds twice, or the designer is pulled mid-sprint.",
+        "text": "'Modern and clean' has no owner or sign-off. Is the designer's approved mock the criterion, or does the CEO review?",
+        "why_it_bites_mid_build": "Without a named approver, visual work loops indefinitely at the end of the sprint.",
         "owner": "design",
         "blocking": false
       },
       {
-        "text": "Dependencies says \"none\", but every dashboard surface is fed by Canvas (LTI), the invoicing provider, the ID-verification vendor and the registration window feed.",
-        "why_it_bites_mid_build": "Any new content or reordering touches those feeds; a \"tweak\" that needs a new field from Canvas becomes an integration.",
-        "owner": "engineering",
-        "blocking": false
-      },
-      {
-        "text": "Out of scope is \"nothing in particular\". Not stated whether Canvas-side coursework, notifications/email, Nexa, or mobile are in or out.",
-        "why_it_bites_mid_build": "Scope grows silently toward whatever makes the number move; the sprint has no edge.",
-        "owner": "requester",
-        "blocking": false
-      },
-      {
-        "text": "Size \"M — a few tweaks, maybe a week\" does not match the team's bands (M is a sprint for one person; a week is S) and is stated before any content is chosen.",
-        "why_it_bites_mid_build": "The requester expects a week; the actual band is unknown until the metric and content exist.",
+        "text": "Design section says 'n/a — no UI' for a dashboard change and Dependencies says 'None'. Both are wrong on their face; the spec needs the designer's name in it.",
+        "why_it_bites_mid_build": "An engineer picks this up believing there is no design work and no Canvas or analytics dependency, then blocks in week one.",
         "owner": "engineering",
         "blocking": false
       }
@@ -53,44 +47,44 @@
     "untestable_criteria": [
       {
         "criterion": "THE SYSTEM SHALL make the dashboard more engaging for students.",
-        "rewrite": "Within 4 weeks of release, the share of active students who open the myNXU dashboard on ≥3 distinct days per week rises from <baseline>% to <target>%, measured from existing login/page-view events."
+        "rewrite": "Within four weeks of release, the share of active students who open the dashboard on ≥ 3 distinct days per week rises from [baseline]% to [target]%, measured from myNXU page-view events."
       },
       {
         "criterion": "WHEN a student logs in, THE SYSTEM SHALL show them something that makes them want to come back.",
-        "rewrite": "WHEN a student logs in, THE SYSTEM SHALL show above the fold, without scrolling, the next assignment due (from Canvas), any open invoice or document request with its deadline, and any grade posted since the last login; each item links to its source."
+        "rewrite": "WHEN a student logs in, THE SYSTEM SHALL show their next three dated items (assignment due, invoice due, document deadline, registration window) from the deadline rail, nearest first, above the fold on mobile and desktop; 7-day return rate after first login rises from [baseline]% to [target]%."
       },
       {
         "criterion": "THE SYSTEM SHALL look modern and clean.",
-        "rewrite": "The dashboard matches the approved design (Figma frame <link>) at 360px and 1280px widths, uses the design-system tokens, and passes the existing accessibility checks with no new violations."
+        "rewrite": "The shipped dashboard matches the designer's approved mock [link] at 360px and 1280px widths; the designer signs off before the story moves to Done."
       }
     ],
     "hidden_dependencies": [
       {
+        "name": "Dashboard analytics / instrumentation",
+        "why": "The platform context lists no product analytics. Without a baseline for dashboard visits or actions, 'engage more' cannot be measured, and adding instrumentation may be the first sprint of work before any redesign.",
+        "blocking": true
+      },
+      {
         "name": "Canvas via LTI",
-        "why": "Any \"what's next\" or progress content beyond assignment-due needs data myNXU may not be able to read; item-level module completion is unknown. This is the single thing that moves the band from S/M to XL.",
+        "why": "Any 'progress' or 'what to do next in your course' widget depends on Canvas data; item-level module completion readability from myNXU is unknown. If the chosen content needs it, the size jumps from S/M to XL.",
         "blocking": false
       },
       {
-        "name": "Deadline rail and its event feed",
-        "why": "The rail already shows the events that most plausibly drive return visits; the spec would extend or reorder it but does not name it, so the team cannot tell whether this is a rail change or a new surface.",
-        "blocking": false
-      },
-      {
-        "name": "Nexa support assistant",
-        "why": "If \"engaging\" becomes a chat entry point on the dashboard, the assistant's catalogue and record access are in scope and its owner has not been consulted.",
+        "name": "Deadline rail events",
+        "why": "The events available today (assignment due, grade posted, credential earned, invoice, document status, registration window) are the only material the dashboard can show without new integrations. The spec should name them as its bound.",
         "blocking": false
       }
     ],
     "size": {
       "band": "XL",
-      "confidence": 0.8,
-      "risk": "Unsizeable until a metric and one content change are named; if the content is existing events rearranged with a design attached, it collapses to M. If it requires Canvas module progress, it stays XL."
+      "confidence": 0.9,
+      "risk": "Unsizeable as written. If the requester pins one metric and one segment and the change is bounded to existing rail events with a designer's mock, it collapses to S–M in one sprint; if it requires Canvas module progress or new analytics, it stays XL."
     },
     "refinement_agenda": [
-      "Agree the engagement metric, its baseline and the target — and confirm the team can measure it with the events it has today.",
-      "Pick the one content change that targets that metric (existing events reordered vs new Canvas data), with the designer producing the frame in the room.",
-      "Confirm the data source for that content, then re-size and set the out-of-scope list."
+      "Fix the single engagement metric, its baseline and target, and confirm the team can measure it today or name the instrumentation story that comes first.",
+      "Choose the one dashboard change most likely to move that metric for the named segment, bounded to events myNXU already has; park anything needing Canvas module data.",
+      "Replace 'modern and clean' with designer sign-off on an approved mock, and rewrite the three acceptance criteria to the observable forms above."
     ],
-    "requester_message": "This can't go to the team yet: \"engage more\" isn't defined, so nobody can build toward it or know when it's done.\n\nOwed from you by Thursday triage:\n1. What \"engage more\" means as a number — e.g. students opening the dashboard on 3+ days a week — plus the baseline today and the target you'd call a win.\n2. Why you think students don't come back now: what you've heard from them or seen in the data.\n3. One concrete example of what you'd want a student to see on login that they can't get from Canvas.\n\nWith those three, the team can pick the content and size it at refinement; the designer and an engineer will be in the room. Without them, it stays in Inbox.\n\nNote the current sprint is in flight. If this jumps the queue at triage, one item already in Ready moves to the following sprint — I'll name which one on Thursday once we know the size."
+    "requester_message": "The dashboard request can't reach the team yet because it doesn't say what you've seen or what should change. Before Thursday triage, we need three things from you and only you: (1) what prompted this — the number, complaint or observation that says the dashboard is the problem; (2) the one measure you'd accept as proof it worked (e.g. students opening the dashboard three days a week, or acting on a deadline sooner), with whatever baseline you have; (3) which students you have in mind — new starters, learners at risk, learners with open invoices, or everyone. With those, the designer and an engineer can settle the rest in refinement. Two corrections to the draft: this is UI work, so the designer is on it, and it touches Canvas and analytics, so 'no dependencies' is wrong. Current sprint items are committed through sprint end; if this jumps the queue, one of them slides, and the team will name which at Thursday triage once we know the size. I can't give a delivery date until the metric is fixed — the same request is a week or a quarter depending on the answer."
   }
 }

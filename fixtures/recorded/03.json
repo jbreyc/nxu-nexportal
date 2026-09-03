@@ -2,74 +2,58 @@
   "key": "03",
   "model": "claude-fable-5-1",
   "prompt_version": 2,
-  "ts": "2026-09-03T18:07:42+00:00",
+  "ts": "2026-09-03T11:42:30+00:00",
   "structured_output": {
-    "outcome": "None stated. The request gives a competitive rationale (\"every university site has one\"), not a learner outcome. Steelmanned: learners get answers to programme, payment and deadline questions in one conversational place without waiting on support; prospects see parity with other university sites. Which of those two you mean decides the product — logged-in learner assistant vs public-site marketing bot — and they are different builds on different surfaces.",
+    "outcome": "Learner outcome: none stated. The request gives a parity motive (\"every university site has one\"), not a learner problem. Strongest reading: surface a conversational assistant inside myNXU that answers programme, payment and deadline questions from the catalogue and the learner's record — which is Nexa as described in platform context. First ambiguity: is this Nexa, or something beyond it (general LLM chat, Canvas coursework help, prospective-learner chat on the public site)? \"University site\" points at the public website; \"the APIs we already have\" points at the portal. Those are different products.\n\nBlocking (requester must supply): (1) which product — Nexa surfaced in the portal, Nexa extended, or a new bot; (2) which learner and which questions — enrolled learner in the portal vs anonymous visitor on the marketing site; (3) which APIs \"we already have\" means. Without these the request cannot be sized.\n\nHidden dependencies (not named in the request): Nexa itself — the spec touches its scope without naming it; the invoicing/payments provider — any payment answer reads it, and partial-payment behaviour is unknown; Canvas — any coursework or module-completion answer depends on data myNXU may not be able to read. LLM vendor and per-conversation cost is a fourth, held back until the product is named.\n\nUntestable: no acceptance criteria offered; nothing to judge.\n\nAgenda for refinement, once the blocking items land: (1) enrolled-learner portal assistant or public-site bot — pick one; (2) what the bot may answer from the learner's record (payments, SAP standing, deadlines) and what it must refuse or hand to support; (3) placement — rail, floating widget, or page (design).\n\nBoard: Inbox → Triaged on Thursday if the three blocking items are supplied; otherwise stays Inbox with the owed items attached.",
     "urgency": {
-      "claim": "Needed this sprint; every university site has one and ours doesn't; quick with existing APIs.",
-      "evidence": "None supplied. No support-ticket volume, no learner complaint, no lost-prospect data, no deadline, no contract or launch date. 'Quick with the APIs we already have' names no API. The platform context shows Nexa already answers programme, payment and deadline questions — so the gap as stated ('ours doesn't') is not confirmed.",
-      "assessment": "Unsubstantiated. The sprint is committed and the request arrived out of process on Tuesday; triage is Thursday. Nothing in the request or the platform context shows learner harm from waiting one triage cycle. If there is a date behind this (board, accreditation visit, marketing launch), that is the missing evidence and would change the assessment."
+      "claim": "This sprint. Quick with existing APIs.",
+      "evidence": "None. Parity with other university sites is a motive, not a date. No learner complaint, no support-ticket volume, no launch, no contractual or term date cited. 'Quick' is asserted, not shown; no API is named.",
+      "assessment": "Not urgent on the evidence given. Mid-sprint entry would displace committed In Sprint work for an unsized item. Goes to Thursday triage on the normal path. If there is a real driver — a support backlog figure, a term start, a leadership commitment — it changes the assessment and should be stated."
     },
     "duplicate": {
       "is_duplicate": false,
       "of_issue": null,
-      "why": "No open issues were shortlisted. Not a duplicate of an issue — but it may be a duplicate of a capability: Nexa exists in the platform context and covers the most likely question set. Confirm at triage whether the request is 'expose/extend Nexa' before opening a new issue."
+      "why": "No open issues were shortlisted. Nexa is a stated platform assumption, not a tracked issue; if an issue exists for surfacing Nexa in myNXU it did not match, and triage should check the board by hand on Thursday."
     },
     "size": {
       "band": "XL",
-      "confidence": 0.35,
-      "risk": "Unsizeable as written; XL is the honest band for 'AI chatbot' with no scope. If the answer is 'put Nexa in the myNXU shell as a chat entry point, same question set', the band drops to M (one person, one sprint). If it must answer from Canvas coursework/grades, read the learner's invoices via the payments provider, or send learner-record data to an external model vendor, it stays XL: that adds a vendor selection, a per-conversation cost budget, a data-handling rule, and a Canvas read path whose availability the team lists as unknown."
+      "confidence": 0.3,
+      "risk": "Unsizeable as asked. If the answer is 'embed the existing Nexa in the portal shell and it already exposes an API', this drops to M — a sprint, one person, plus design for placement. If it is a new bot, a public-site bot, or Nexa extended into Canvas or payment data, XL holds and a vendor, cost and data-access decision precede any build."
     },
     "questions": [
       {
-        "text": "BLOCKING — Is this Nexa? Nexa already answers programme, payment and deadline questions from the catalogue and the learner's record. Do you want (a) Nexa surfaced as a chat entry point in myNXU, (b) Nexa extended to new question types — name them, or (c) a different bot on the public site for prospects? Pick one; each is a different build.",
+        "text": "Is this Nexa — the support assistant that already answers programme, payment and deadline questions — surfaced inside myNXU, or something Nexa does not do today? If the latter, name the three questions a learner asks that go unanswered now.",
         "owner": "requester"
       },
       {
-        "text": "BLOCKING — What must it answer, for whom, and what counts as done? Give the ten questions it must handle on day one and who is asking (logged-in learner, prospect, both). 'AI chatbot' is not a scope; ten questions is.",
+        "text": "Who is it for and where does it live: an enrolled learner inside the portal, or a prospective learner on the public university site? 'Every university site has one' suggests the public site; 'the APIs we already have' suggests the portal.",
         "owner": "requester"
       },
       {
-        "text": "BLOCKING — Data rule: may the learner's own record (grades from Canvas, open invoices, ID-document status) be sent to an external model vendor to generate an answer? If yes, under what terms; if no, the bot answers from the catalogue only. The team cannot set this rule.",
+        "text": "Which APIs do you mean by 'the APIs we already have'? Name them.",
         "owner": "requester"
       },
       {
-        "text": "BLOCKING only if (b) or (c): who pays per conversation? A hosted model has a per-request cost that scales with learners. Name a monthly ceiling or name the vendor already contracted.",
+        "text": "What is the learner outcome you would measure — fewer support tickets, faster deadline answers, enrolment conversion? Give one, with a current baseline if you have it.",
         "owner": "requester"
       },
       {
-        "text": "Which APIs do you mean by 'the APIs we already have'? If you mean a specific vendor account or key that exists, name it — the team does not have one listed.",
+        "text": "When the bot gives a wrong answer about an invoice amount, a SAP standing or a document deadline, who owns the consequence, and what must it refuse to answer?",
         "owner": "requester"
       },
       {
-        "text": "What happens when the bot is wrong or cannot answer — who is on the other end of the handoff, and during what hours? A support team, a ticket, or nothing. This decides whether the bot creates support load or removes it.",
-        "owner": "requester"
-      },
-      {
-        "text": "Is there a date behind 'this sprint' — board meeting, accreditation visit, marketing launch? If so, that is the urgency evidence; supply it.",
-        "owner": "requester"
-      },
-      {
-        "text": "Can Nexa be embedded in the myNXU shell as-is, and what does it need from the shell (learner identity, session) to answer from the learner's record? Confirm in refinement.",
+        "text": "Does Nexa expose an API or embeddable surface myNXU can call, what does it read from the learner record, and does it touch Canvas or the invoicing provider directly?",
         "owner": "engineering"
       },
       {
-        "text": "Is item-level Canvas data (module completion, coursework) readable from myNXU today? Platform context lists this as unknown; if the bot must answer coursework questions, this is a prerequisite, not a feature.",
-        "owner": "engineering"
+        "text": "Is there a budget and approved vendor for per-conversation LLM cost, and who signs it?",
+        "owner": "requester"
       },
       {
-        "text": "Can the payments provider's open-invoice state be read per learner for a conversational answer, or only the events already on the deadline rail (invoice issued/paid)?",
-        "owner": "engineering"
-      },
-      {
-        "text": "Where does the chat live in the shell (persistent widget, page, deadline-rail entry), and how does it hand off to a human without losing the conversation? Bring an option to refinement.",
-        "owner": "design"
-      },
-      {
-        "text": "What does the bot say when it will not answer (data rule says no, or out of scope)? Refusal copy and escalation path.",
+        "text": "Where does a conversational surface sit in the shell — deadline rail, floating widget, or its own page — and how does it hand off to human support?",
         "owner": "design"
       }
     ],
-    "requester_message": "You asked for an AI chatbot this sprint because other university sites have one. Two things before this can be triaged on Thursday.\n\nFirst: we already have one. Nexa answers programme, payment and deadline questions from the catalogue and the learner's own record. So I need you to say which of these you mean — (a) put Nexa in front of learners in myNXU as a chat entry point, (b) make Nexa answer new kinds of questions (tell me which), or (c) a bot on the public site for prospects who aren't logged in. These are three different builds. (a) is roughly one person for one sprint. (b) and (c) are bigger than a sprint and need decisions only you can make: whether a learner's grades, invoices or ID status may be sent to an outside AI vendor to produce an answer, and what we're willing to pay per conversation.\n\nSecond: the sprint is already committed. If this goes in now, something the team has committed to comes out, and you would be choosing which at Thursday's triage — I will not pull anything without you naming it. If there is a date driving this (board, accreditation, a launch), tell me the date and I will weigh it against what's in flight.\n\nWhat I need from you before Thursday triage:\n1. Which of (a), (b), (c).\n2. The ten questions it must answer on day one, and who is asking.\n3. Yes or no: may learner-record data go to an external model vendor.\n4. If (b) or (c): a monthly spend ceiling, or the name of the vendor account you believe we already have.\n5. Who handles the handoff when the bot can't answer.\n\nWith those five answers it goes to Thursday triage as a sized item. Without them it goes to triage as a question, and the answer will be the same list."
+    "requester_message": "Got the chatbot request. It came in outside the board, so I've put it in Inbox; triage is Thursday and that's where it gets a decision.\n\nIt can't be sized as written, and nothing enters the sprint unsized. Three things only you can answer, owed by Thursday:\n\n1. Is this Nexa — the assistant we already have for programme, payment and deadline questions — put in front of learners inside the portal? Or something Nexa doesn't do? If the second, name the three questions learners ask today that go unanswered.\n2. Who is it for and where: an enrolled learner inside myNXU, or a visitor on the public university site? Those are different builds.\n3. Which APIs do you mean by \"the ones we already have\"? Name them.\n\nOne more that helps: what would you measure — fewer tickets, faster deadline answers, conversion?\n\nOn \"this sprint\": the current sprint is committed. Anything that jumps in mid-sprint displaces something already In Sprint, and I'd need you to name the item you'd pull rather than have the team guess. If there's a driver behind the timing — a support backlog number, a term date, a commitment made upstairs — say so and it changes the assessment.\n\nIf the answer to (1) is \"yes, it's Nexa in the portal\", this is a much smaller conversation. Send the answers and it goes to Thursday with a real size."
   }
 }
