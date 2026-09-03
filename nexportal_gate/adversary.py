@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import re
 import subprocess
+import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -44,7 +45,7 @@ class ClaudeCodeClient:
     tool denial keeps it to one call; `--bare` is API-key-only and is never used."""
 
     def __init__(self, model: str = DEFAULT_MODEL, runner=subprocess.run, cwd: Path | None = None,
-                 timeout: int = 180):
+                 timeout: int = 300):
         self.model, self.runner, self.cwd, self.timeout = model, runner, cwd, timeout
 
     def argv(self, user: str, schema: dict, system: str) -> list[str]:
@@ -85,14 +86,25 @@ class ClaudeCodeClient:
 
 
 class ReplayClient:
-    def __init__(self, directory: Path):
-        self.directory = Path(directory)
+    """Recorded responses by key. Tracks the prompt version each was recorded under and warns when
+    it differs from the current one — a replay describes the recorded run, never the current prompt."""
+
+    def __init__(self, directory: Path, prompt_version: int | None = None):
+        self.directory, self.prompt_version = Path(directory), prompt_version
+        self.versions_seen: set[int] = set()
 
     def complete(self, system: str, user: str, schema: dict, *, key: str) -> dict:
         path = self.directory / f"{key}.json"
         if not path.exists():
             raise AdversaryError(f"no recorded response for {key!r} at {path} — run with --record first")
-        return json.loads(path.read_text(encoding="utf-8"))["structured_output"]
+        data = json.loads(path.read_text(encoding="utf-8"))
+        recorded = data.get("prompt_version")
+        if recorded is not None:
+            self.versions_seen.add(recorded)
+            if self.prompt_version is not None and recorded != self.prompt_version:
+                print(f"replay: {key} was recorded under prompt v{recorded}; the current prompt is "
+                      f"v{self.prompt_version}", file=sys.stderr)
+        return data["structured_output"]
 
 
 class RecordingClient:

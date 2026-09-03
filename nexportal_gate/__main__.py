@@ -22,7 +22,9 @@ from . import adversary, board, draft, fixtures as fx, records
 from .adversary import AdversaryError, ClaudeCodeClient, RecordingClient, ReplayClient, run_gate
 from .board import BoardError
 from .intake import run_intake
+from .text import body_hash
 
+GH = board.gh_run          # the one gh runner the commands use; tests replace it
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -36,6 +38,7 @@ def _add_common(p: argparse.ArgumentParser, *, llm=True, github=True):
     p.add_argument("--dry-run", action="store_true", help="print what would be posted; write nothing")
     if llm:
         p.add_argument("--model", default=adversary.DEFAULT_MODEL)
+        p.add_argument("--timeout", type=int, default=300, help="seconds per model call (default: 300)")
         p.add_argument("--replay", action="store_true", help="use recorded responses (no Claude Code)")
         p.add_argument("--record", action="store_true", help="run live and save the responses")
         p.add_argument("--recorded-dir", default=None, help="default: fixtures/recorded")
@@ -51,14 +54,22 @@ def _paths(args):
     return root, prompts, context.read_text(encoding="utf-8"), recorded
 
 
+def _current_version(prompts: Path) -> int:
+    return adversary.prompt_version(adversary.load_prompt("system.md", prompts))
+
+
 def _client(args, prompts: Path, recorded: Path):
     if args.replay:
-        return ReplayClient(recorded)
-    live = ClaudeCodeClient(model=args.model)
+        return ReplayClient(recorded, prompt_version=_current_version(prompts))
+    live = ClaudeCodeClient(model=args.model, timeout=args.timeout)
     if args.record:
-        version = adversary.prompt_version(adversary.load_prompt("system.md", prompts))
-        return RecordingClient(live, recorded, model=args.model, prompt_version=version)
+        return RecordingClient(live, recorded, model=args.model, prompt_version=_current_version(prompts))
     return live
+
+
+def intake_key(text: str) -> str:
+    """The replay/record key of a raw request: content-addressed, so a replay matches by text."""
+    return "intake-" + body_hash(text)[:8]
 
 
 def _repo(args, gh) -> str:
@@ -82,11 +93,24 @@ def cmd_fixtures(args) -> int:
     root, prompts, platform, recorded = _paths(args)
     fixtures_dir = Path(args.fixtures) if args.fixtures else root / "fixtures"
     open_issues = json.loads((fixtures_dir / "open-issues.json").read_text(encoding="utf-8"))
-    rows = fx.run_all(_client(args, prompts, recorded), fixtures_dir=fixtures_dir, prompts_dir=prompts,
+    client = _client(args, prompts, recorded)
+    rows = fx.run_all(client, fixtures_dir=fixtures_dir, prompts_dir=prompts,
                       platform=platform, open_issues=open_issues, model=args.model, only=args.only)
     readings_path = fixtures_dir / "readings.json"
     readings = json.loads(readings_path.read_text(encoding="utf-8")) if readings_path.exists() else {}
-    table = fx.render_results(rows, readings)
+    current = _current_version(prompts)
+    if args.replay:
+        seen = sorted(client.versions_seen)
+        if not seen:
+            note = "Replayed responses carry no prompt version."
+        elif seen == [current]:
+            note = f"Replayed responses recorded under prompt v{current} — the current prompt is v{current}."
+        else:
+            note = (f"WARNING: replayed responses recorded under prompt v{', v'.join(map(str, seen))}; the current "
+                    f"prompt is v{current} — this table describes the recorded run, not the current prompt.")
+    else:
+        note = f"Live run under prompt v{current}."
+    table = fx.render_results(rows, readings, note=note)
     out = Path(args.out) if args.out else fixtures_dir / "results.md"
     if not args.only:
         out.write_text(table, encoding="utf-8")
@@ -101,12 +125,12 @@ def cmd_gate(args) -> int:
         meta, body = fx.split_frontmatter(Path(args.file).read_text(encoding="utf-8"))
         key = meta.get("id") or Path(args.file).stem
         result = run_gate(body, client, key=key, prompts_dir=prompts, platform=platform, model=args.model)
-        print(records.render_gate_comment(result, issue=0), end="")
+        print(records.render_gate_comment(result, issue=0, rerun=f"nexportal-gate gate --file {args.file}"), end="")
         return 0
     if args.issue is None:
         print("gate: an issue number or --file is required", file=sys.stderr)
         return 2
-    gh, n = board.gh_run, args.issue
+    gh, n = GH, args.issue
     repo = _repo(args, gh)
     iss = board.issue(gh, repo, n)
     result = run_gate(iss["body"], client, key=f"issue-{n}", prompts_dir=prompts, platform=platform, model=args.model)
@@ -120,6 +144,9 @@ def cmd_gate(args) -> int:
     if item["id"]:
         board.set_field(gh, cfg, item["id"], "reason", option="Needs-info" if result.verdict == "needs-info" else None)
     print(f"gate: #{n} → {result.verdict}" + (f" — {'; '.join(result.reasons)}" if result.reasons else ""))
+    if result.verdict == "needs-info" and item.get("status") == "Ready":
+        print(f"gate: WARNING #{n} is Ready with a needs-info record — Status is yours to move: "
+              f"nexportal-gate flip {n} Drafted (audit names it until then)", file=sys.stderr)
     return 0
 
 
@@ -127,13 +154,13 @@ def cmd_intake(args) -> int:
     root, prompts, platform, recorded = _paths(args)
     client = _client(args, prompts, recorded)
     weekday = args.weekday or dt.date.today().strftime("%A")
-    gh = board.gh_run
+    gh = GH
     if args.open_issues:
         open_issues, repo = json.loads(Path(args.open_issues).read_text(encoding="utf-8")), args.repo or ""
     else:
         repo = _repo(args, gh)
         open_issues = board.open_issues(gh, repo)
-    result = run_intake(args.text, args.requester, open_issues, client, key=args.key or "intake",
+    result = run_intake(args.text, args.requester, open_issues, client, key=args.key or intake_key(args.text),
                         prompts_dir=prompts, platform=platform, model=args.model, weekday=weekday)
     comment_text = records.render_intake_comment(result, requester=args.requester, text=args.text)
     if result.status == "rejected":
@@ -163,7 +190,7 @@ def cmd_intake(args) -> int:
 
 
 def cmd_draft(args) -> int:
-    gh, n = board.gh_run, args.issue
+    gh, n = GH, args.issue
     repo = _repo(args, gh)
     iss = board.issue(gh, repo, n)
     rec = records.newest_record(iss["comments"], records.INTAKE_MARKER)
@@ -184,12 +211,12 @@ def cmd_draft(args) -> int:
 
 
 def cmd_flip(args) -> int:
-    gh = board.gh_run
+    gh = GH
     return board.flip(gh, board.load_board(Path(args.board)), _repo(args, gh), args.issue, args.status)
 
 
 def cmd_audit(args) -> int:
-    gh = board.gh_run
+    gh = GH
     lines = board.audit(gh, board.load_board(Path(args.board)), _repo(args, gh))
     if not lines:
         print("audit: clean — every Ready item has a fresh NX-GATE record")
@@ -201,7 +228,7 @@ def cmd_audit(args) -> int:
 def cmd_seed(args) -> int:
     from .seed import Seeder
     root, prompts, platform, recorded = _paths(args)
-    gh = board.gh_run
+    gh = GH
     repo = _repo(args, gh)
     seeder = Seeder(gh, board.load_board(Path(args.board)), repo, _client(args, prompts, recorded),
                     prompts_dir=prompts, platform=platform, model=args.model,
@@ -212,7 +239,7 @@ def cmd_seed(args) -> int:
 
 
 def cmd_board_ids(args) -> int:
-    print(board.board_ids(board.gh_run, args.owner, args.project), end="")
+    print(board.board_ids(GH, args.owner, args.project), end="")
     return 0
 
 
@@ -225,7 +252,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--requester", required=True)
     p.add_argument("--weekday", default=None)
     p.add_argument("--open-issues", default=None, help="a JSON file instead of the live repo (offline)")
-    p.add_argument("--key", default=None, help="replay/record key (default: intake)")
+    p.add_argument("--key", default=None, help="replay/record key (default: intake-<sha8 of the text>)")
     _add_common(p)
     p.set_defaults(fn=cmd_intake)
 

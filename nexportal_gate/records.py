@@ -34,13 +34,13 @@ def _plural(n: int, one: str, many: str) -> str:
     return f"{n} {one if n == 1 else many}"
 
 
-def render_gate_comment(result: GateResult, *, issue: int) -> str:
+def render_gate_comment(result: GateResult, *, issue: int, rerun: str | None = None) -> str:
     t2 = result.tier2 or {}
     if result.tier1:
         first, rest = result.tier1[0], result.tier1[1:]
         also = (" · also: " + "; ".join(f"`{f.check}` — {f.message}" for f in rest)) if rest else ""
         summary = (f"**Tier 1 failed at `{first.check}`:** {first.message}{also}\n"
-                   f"Tier 2 skipped. Fix and rerun `nexportal-gate gate {issue}`.\n")
+                   f"Tier 2 skipped. Fix and rerun `{rerun or f'nexportal-gate gate {issue}'}`.\n")
     else:
         blocking = [a for a in t2.get("ambiguities") or [] if a.get("blocking") and a.get("owner") != "engineering"]
         owners = ", ".join(sorted({a.get("owner", "?") for a in blocking})) or "none"

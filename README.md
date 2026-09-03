@@ -73,6 +73,14 @@ hooks/ commands/ .claude-plugin/   the Claude Code plugin
 board.toml        the board's identifiers (rendered by `nexportal-gate board-ids`)
 ```
 
+## Limits, stated
+
+- The duplicate shortlist reads the first 100 open issues; `audit` the first 100 board items; an issue's board membership its first 20 project items. Enough for a team's board, not paginated.
+- `board-ids` expects the fields to be named Status, Reason, Size and Requester. `seed` is one-shot: a rerun creates a second set.
+- The plugin's hook locks the raw door only when `board.toml` is at the plugin root or the working directory.
+- A replay describes the recorded run: `fixtures --replay` says which prompt version the responses were recorded under and warns when it is not the current one. Model calls time out at 300 s (`--timeout`).
+- The live `intake` / `draft` / `flip` paths are tested against fakes at the function level and, for `gate` and `intake`, through the CLI; `fixtures` and `gate --file` are tested end to end.
+
 ## Assumptions, stated
 
 - [`context/platform.md`](context/platform.md) is everything the gate knows about NexPortal — the facts the fixtures and the specs on the board lean on. Correct it and the judgement moves with it.
