@@ -81,6 +81,7 @@ board.toml        the board's identifiers (rendered by `nexportal-gate board-ids
 - The plugin's hook locks the raw door only when `board.toml` is at the plugin root or the working directory.
 - A replay describes the recorded run: `fixtures --replay` says which prompt version the responses were recorded under and warns when it is not the current one. Model calls time out at 300 s (`--timeout`).
 - The recordings are one run, and the adversary is not deterministic across runs: re-running fixtures 02 and 03 under the same prompt v2 with only the requester handle changed moved 02's blocking-ambiguity count from two to one (verdict unchanged) and dropped the displacement line from 03's message (its `message mentions any of …` predicate went from pass to miss — 4/6 became 3/6). The pre-registered expectations are the fixed point; the results table is a sample. That second run is kept in git history (`79b9b68`).
+- Design links in seed and fixture specs are synthetic placeholders; the gate checks that a design reference is present, not that it resolves.
 - The live `intake` / `draft` / `flip` paths are tested against fakes at the function level and, for `gate` and `intake`, through the CLI; `fixtures` and `gate --file` are tested end to end.
 
 ## Assumptions, stated
